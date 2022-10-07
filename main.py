@@ -51,4 +51,4 @@ if __name__ == '__main__':
     print(ids[:5])
     print(x_test[:5,:])
 
-    create_csv_submission(np.arange(1000, 1005), np.array([1,1,-1,-1,1]), "o.csv")
+    
