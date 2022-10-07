@@ -18,8 +18,8 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         #compute loss
         loss = compute_loss(y, tx, w)
 
-        print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
-              bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
+        ##print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
+              ##bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
 
     return w, loss
 
@@ -34,7 +34,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     np.random.seed(1)
 
     w = initial_w
-    batch_size = 1
+    batch_size = 100
     for n_iter in range(max_iters):
         for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size=batch_size, num_batches=1):
             # compute gradient
@@ -44,6 +44,8 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
             #compute loss
             loss = compute_loss(minibatch_y, minibatch_tx, w)
             print(loss)
+            ##if(loss < 0.001):
+                ##return w, loss
 
 
     return w, loss
