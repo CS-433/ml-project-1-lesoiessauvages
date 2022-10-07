@@ -21,7 +21,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
               bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
 
-    return loss, w
+    return w, loss
 
 
 def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
@@ -30,6 +30,8 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
         w : Last weight vector
         loss : coresponding loss
     """
+
+    np.random.seed(1)
 
     w = initial_w
     batch_size = 1
@@ -41,8 +43,10 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
             w = w - gamma*gradient
             #compute loss
             loss = compute_loss(minibatch_y, minibatch_tx, w)
+            print(loss)
 
-    return loss, w
+
+    return w, loss
 
 
 def least_squares(y, tx):
@@ -81,7 +85,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     """
 
 
-def reg_logistic_regression(y, tx, lambda, initial_w, max_iters, gamma):
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """Regularized logistic regression using gradient descent
     or SGD (y ∈ {0, 1}, with regularization term λ∥w∥2 )
     Returns :

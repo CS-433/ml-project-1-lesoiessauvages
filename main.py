@@ -1,3 +1,4 @@
+from implementations import *
 import csv
 import numpy as np
 
@@ -46,9 +47,15 @@ if __name__ == '__main__':
     x_train, _, _ = standardize(x_train)
     x_test, _, _ = standardize(x_test)
 
-    print(x_train[:5,:])
-    print(y_train[:5])
-    print(ids[:5])
-    print(x_test[:5,:])
+    # print(x_train[:5,:])
+    # print(y_train[:5])
+    # print(ids[:5])
+    # print(x_test[:5,:])
 
-    
+    w, loss = least_squares_SGD(y_train, x_train, np.ones(30), 1000, 1)
+
+    print(loss)
+
+    y_test = x_test@w
+
+    create_csv_submission(ids, y_test, "o.csv")
