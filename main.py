@@ -2,6 +2,8 @@ from implementations import *
 import csv
 import numpy as np
 
+# IO FUNCTIONS
+
 def load_features(path_dataset):
     """Load all columns from data, droping the first two."""
     return np.genfromtxt(path_dataset, delimiter=",", skip_header=1)[:,2:]
@@ -19,15 +21,6 @@ def load_ids(path_dataset):
     ids = np.genfromtxt(path_dataset, delimiter=",", skip_header=1, usecols=0)
     return ids
 
-# TODO: standardize column-wise
-def standardize(x):
-    """Standardize the original data set."""
-    mean_x = np.mean(x, axis=0)
-    x = x - mean_x
-    std_x = np.std(x, axis=0)
-    x = x / std_x
-    return x, mean_x, std_x
-
 def create_csv_submission(ids, y_pred, name):
     """
     Creates an output file in .csv format for submission to Kaggle or AIcrowd
@@ -41,6 +34,24 @@ def create_csv_submission(ids, y_pred, name):
         writer.writeheader()
         for r1, r2 in zip(ids, y_pred):
             writer.writerow({'Id':int(r1),'Prediction':int(r2)})
+
+
+# MATH FUNCTIONS
+
+def build_poly(x, degree):
+    """polynomial basis functions for input data x, for j=0 up to j=degree."""
+    output = np.ones(x.shape)
+    for i in range(1, degree+1):
+        output = np.c_[output, x**i]
+    return output
+
+def standardize(x):
+    """Standardize the original data set column-wise."""
+    mean_x = np.mean(x, axis=0)
+    x = x - mean_x
+    std_x = np.std(x, axis=0)
+    x = x / std_x
+    return x, mean_x, std_x
 
 def roundToPrediction(a):
     a[a < 0] = -1
@@ -56,15 +67,21 @@ if __name__ == '__main__':
     x_train, _, _ = standardize(x_train)
     x_test, _, _ = standardize(x_test)
 
+    phi_train = build_poly(x_train, 6)
+    phi_test = build_poly(x_test, 6)
+
     # print(x_train[:5,:])
     # print(y_train[:5])
     # print(ids[:5])
     # print(x_test[:5,:])
 
+    w, loss = ridge_regression(y_train, phi_train, 10)
+    ##w, loss = least_squares_SGD(y_train, phi_train, np.ones(120), 1000, 0.001)
     ##w, loss = least_squares_SGD(y_train, x_train, np.ones(30), 1000, 0.001)
-    w, loss = least_squares(y_train, x_train)
+    ##w, loss = least_squares(y_train, x_train)
 
-    y_test = x_test@w
+    ##y_test = x_test@w
+    y_test = phi_test@w
     y_test = roundToPrediction(y_test)
 
     print(loss)
