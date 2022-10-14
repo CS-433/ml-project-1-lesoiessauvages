@@ -21,7 +21,11 @@ if __name__ == '__main__':
     # print(ids[:5])
     # print(x_test[:5,:])
 
-    w, loss = logistic_regression(y_train, x_train, np.zeros(30), 1, 0.0001)
+    degrees = np.arange(2,8)
+    lambdas = np.logspace(-4, 0, 30)
+    best_degree, best_lambda, best_rmse = best_degree_selection(y_train, x_train, degrees, 4, lambdas)
+
+    ##w, loss = logistic_regression(y_train, x_train, np.zeros(30), 1, 0.0001)
     ##w, loss = ridge_regression(y_train, phi_train, 10)
     ##w, loss = least_squares_SGD(y_train, phi_train, np.ones(120), 1000, 0.001)
     ##w, loss = least_squares_SGD(y_train, x_train, np.ones(30), 1000, 0.001)
