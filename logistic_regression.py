@@ -1,3 +1,5 @@
+import numpy as np
+
 def sigmoid(t):
     """apply sigmoid function on t.
 
