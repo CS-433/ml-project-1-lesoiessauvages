@@ -44,11 +44,6 @@ def compute_gradient(y, tx, w):
     Returns:
         a vector of shape (D, 1)
 
-    >>> np.set_printoptions(8)
-    >>> y = np.c_[[0., 1.]]
-    >>> tx = np.arange(6).reshape(2, 3)
-    >>> w = np.array([[0.1], [0.2], [0.3]])
-    >>> calculate_gradient(y, tx, w)
     array([[-0.20741526],
            [ 0.4134208 ],
            [ 1.03425686]])
@@ -65,7 +60,6 @@ def penalized_logistic_regression_gradient(y, tx, w, lambda_):
     return gradient
 
 def penalized_logistic_regression_loss(y, tx, w, lambda_):
-        """
-    ### SOLUTION
+
     loss = calculate_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
     return loss

@@ -21,14 +21,14 @@ if __name__ == '__main__':
     # print(ids[:5])
     # print(x_test[:5,:])
 
-    w, loss = logistic_regression(y_train, x_train, np.ones(30), 1000, 0.001)
+    w, loss = logistic_regression(y_train, x_train, np.ones(30), 10, 0.001)
     ##w, loss = ridge_regression(y_train, phi_train, 10)
     ##w, loss = least_squares_SGD(y_train, phi_train, np.ones(120), 1000, 0.001)
     ##w, loss = least_squares_SGD(y_train, x_train, np.ones(30), 1000, 0.001)
     ##w, loss = least_squares(y_train, x_train)
 
-    ##y_test = x_test@w
-    y_test = phi_test@w
+    y_test = x_test@w
+    ##y_test = phi_test@w
     y_test = roundToPrediction(y_test)
 
     print(loss)
