@@ -26,19 +26,6 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
 
-def calculate_mse(e):
-    return np.mean(e**2)/2
-
-def compute_loss(y, tx, w):
-    e = y - tx@w
-    return calculate_mse(e)
-
-def compute_gradient(y, tx, w):
-    """Compute the gradient."""
-    e = y - tx@w
-    grad = -tx.T@e /len(y)
-    return grad
-
 def build_poly(x, degree):
     """polynomial basis functions for input data x, for j=0 up to j=degree."""
     output = np.ones(x.shape)

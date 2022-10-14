@@ -7,17 +7,12 @@ def sigmoid(t):
     Returns:
         scalar or numpy array
 
-    >>> sigmoid(np.array([0.1]))
-    array([0.52497919])
-    >>> sigmoid(np.array([0.1, 0.1]))
-    array([0.52497919, 0.52497919])
     """
-    ### SOLUTION
     return 1.0 / (1 + np.exp(-t))
 
 
 
-def calculate_loss(y, tx, w):
+def compute_loss(y, tx, w):
     """compute the cost by negative log likelihood.
 
     Args:
@@ -37,13 +32,12 @@ def calculate_loss(y, tx, w):
     assert y.shape[0] == tx.shape[0]
     assert tx.shape[1] == w.shape[0]
 
-    ### SOLUTION
     pred = sigmoid(tx.dot(w))
     loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
     return np.squeeze(- loss).item()
 
 
-def calculate_gradient(y, tx, w):
+def compute_gradient(y, tx, w):
     """compute the gradient of loss.
 
     Args:
@@ -63,9 +57,9 @@ def calculate_gradient(y, tx, w):
            [ 0.4134208 ],
            [ 1.03425686]])
     """
-    ### SOLUTION
     pred = sigmoid(tx.dot(w))
     grad = tx.T.dot(pred - y)
+    loss = compute_loss(y, tx, w)
     return grad
 
 
@@ -82,20 +76,8 @@ def learning_by_gradient_descent(y, tx, w, gamma):
     Returns:
         loss: scalar number
         w: shape=(D, 1)
-
-    >>> y = np.c_[[0., 1.]]
-    >>> tx = np.arange(6).reshape(2, 3)
-    >>> w = np.array([[0.1], [0.2], [0.3]])
-    >>> gamma = 0.1
-    >>> loss, w = learning_by_gradient_descent(y, tx, w, gamma)
-    >>> round(loss, 8)
-    1.24274536
-    >>> w
-    array([[0.12074153],
-           [0.15865792],
-           [0.19657431]])
     """
-    ### SOLUTION
+    
     loss = calculate_loss(y, tx, w)
     grad = calculate_gradient(y, tx, w)
     w -= gamma * grad
