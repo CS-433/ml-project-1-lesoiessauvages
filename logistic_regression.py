@@ -55,3 +55,15 @@ def compute_gradient(y, tx, w):
     grad = tx.T.dot(pred - y)
     loss = compute_loss(y, tx, w)
     return grad
+
+
+def penalized_logistic_regression_gradient(y, tx, w, lambda_):
+
+    gradient = calculate_gradient(y, tx, w) + 2 * lambda_ * w
+    return gradient
+
+def penalized_logistic_regression_loss(y, tx, w, lambda_):
+        """
+    ### SOLUTION
+    loss = calculate_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
+    return loss

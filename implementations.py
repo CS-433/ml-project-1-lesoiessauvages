@@ -107,3 +107,12 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         w : Last weight vector
         loss : coresponding loss
     """
+    w = initial_w
+
+    for iter in range(max_iter):
+
+        grad = logistic_regression.penalized_logistic_regression_gradient(y, tx, w, lambda_)
+        w -= gamma * grad
+        loss = penalized_logistic_regression_loss(y, tx, w, lambda_)
+
+    return w, loss
