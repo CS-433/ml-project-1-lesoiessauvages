@@ -1,6 +1,7 @@
 from implementations import *
 from math_helpers import *
 from io_helpers import *
+from cross import *
 import numpy as np
 
 
@@ -13,15 +14,15 @@ if __name__ == '__main__':
     x_train, _, _ = standardize(x_train)
     x_test, _, _ = standardize(x_test)
 
-    phi_train = build_poly(x_train, 6)
-    phi_test = build_poly(x_test, 6)
+    ##phi_train = build_poly(x_train, 6)
+    ##phi_test = build_poly(x_test, 6)
 
     # print(x_train[:5,:])
     # print(y_train[:5])
     # print(ids[:5])
     # print(x_test[:5,:])
 
-    degrees = np.arange(2,8)
+    degrees = np.arange(1,8)
     lambdas = np.logspace(-4, 0, 30)
     best_degree, best_lambda, best_rmse = best_degree_selection(y_train, x_train, degrees, 4, lambdas)
 
@@ -31,7 +32,12 @@ if __name__ == '__main__':
     ##w, loss = least_squares_SGD(y_train, x_train, np.ones(30), 1000, 0.001)
     ##w, loss = least_squares(y_train, x_train)
 
-    y_test = x_test@w
+    phi_train = build_poly(x_train, best_degree)
+    phi_test = build_poly(x_test, best_degree)
+    w, loss = ridge_regression(y_train, phi_train, best_lambda)
+
+    y_test = phi_test@w
+    ##y_test = x_test@w
     ##y_test = phi_test@w
     y_test = roundToPrediction(y_test)
 

@@ -10,8 +10,8 @@ def load_features(path_dataset):
 def load_labels(path_dataset):
     """Load second column of data. Translates 'b' into -1 and 's' into 1."""
     labels = np.genfromtxt(path_dataset, delimiter=",", skip_header=1, usecols=1, dtype=str)
-    #labels = np.char.replace(labels, 'b', '-1')
-    labels = np.char.replace(labels, 'b', '0')
+    labels = np.char.replace(labels, 'b', '-1')
+    #labels = np.char.replace(labels, 'b', '0')
     labels = np.char.replace(labels, 's', '1')
 
     return labels.astype(int)

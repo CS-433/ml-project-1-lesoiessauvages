@@ -79,7 +79,7 @@ def ridge_regression(y, tx, lambda_):
     w = np.linalg.solve(a, b)
     loss = linreg.compute_loss(y, tx, w)
 
-    print(loss)
+    #print(loss)
     return w, loss
 
 
