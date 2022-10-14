@@ -50,7 +50,6 @@ def compute_gradient(y, tx, w):
     """
     pred = sigmoid(tx.dot(w))
     grad = tx.T.dot(pred - y)
-    loss = compute_loss(y, tx, w)
     return grad
 
 
