@@ -25,11 +25,13 @@ def compute_loss(y, tx, w):
         a non-negative loss
 
     """
+
+    #print("begin compute loss")
     assert y.shape[0] == tx.shape[0]
     assert tx.shape[1] == w.shape[0]
-
+    epsilon = 1e-7
     pred = sigmoid(tx.dot(w))
-    loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    loss = y.T.dot(np.log(pred + epsilon)) + (1 - y).T.dot(np.log(1 - pred + epsilon))
     return np.squeeze(- loss).item()
 
 

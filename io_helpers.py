@@ -10,7 +10,7 @@ def load_features(path_dataset):
 def load_labels(path_dataset):
     """Load second column of data. Translates 'b' into -1 and 's' into 1."""
     labels = np.genfromtxt(path_dataset, delimiter=",", skip_header=1, usecols=1, dtype=str)
-    labels = np.char.replace(labels, 'b', '-1')
+    labels = np.char.replace(labels, 'b', '0')
     #labels = np.char.replace(labels, 'b', '0')
     labels = np.char.replace(labels, 's', '1')
 
@@ -34,3 +34,14 @@ def create_csv_submission(ids, y_pred, name):
         writer.writeheader()
         for r1, r2 in zip(ids, y_pred):
             writer.writerow({'Id':int(r1),'Prediction':int(r2)})
+
+def save_weights(weights, name):
+    """
+    Creates an output file in .csv format for submission to Kaggle or AIcrowd
+    Arguments: ids (event ids associated with each prediction)
+               y_pred (predicted class labels)
+               name (string name of .csv output file to be created)
+    """
+    f = open(name, "w")
+    f.write(str(weights))
+    f.close()

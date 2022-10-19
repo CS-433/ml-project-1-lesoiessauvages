@@ -43,8 +43,8 @@ def standardize(x):
     return x, mean_x, std_x
 
 def roundToPrediction(a):
-    a[a < 0] = -1
-    a[a >= 0] = 1
+    a[a < 0.5] = -1
+    a[a >= 0.5] = 1
     return a
 
 def build_k_indices(y, k_fold, seed):
