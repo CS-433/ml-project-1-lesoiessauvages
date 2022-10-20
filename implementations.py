@@ -73,7 +73,7 @@ def ridge_regression(y, tx, lambda_):
         w : Last weight vector
         loss : coresponding loss
     """
-    lI = lambda_*2*len(y)*np.eye(tx.shape[1])
+    lI = lambda_*2*y.shape[0]*np.eye(tx.shape[1])
     a = tx.T@tx + lI
     b = tx.T@y
     w = np.linalg.solve(a, b)

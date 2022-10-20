@@ -77,27 +77,28 @@ def best_degree_selection(y, x, degrees, k_fold, lambdas, seed = 1):
 
 
     # cross validation over degrees and lambdas
-    # TODO: Rename variables
     rmse_te = []
     best_lambdas = []
 
 
     for degree in degrees:
-        rmse_te4 = []
+        rmse_te_for_degree = []
         for lambda_ in lambdas:
-            rmse_te3 = []
+            sum_rmse_te = 0
             for k in range(k_fold):
-                rmse_tr2, rmse_te2 = cross_validation(y, x, k_indices, k, lambda_, degree)
-                rmse_te3.append(rmse_te2)
-            print("Lambda : " + str(lambda_) + " degree : " + str(degree) + " loss : " + str(np.mean(rmse_te3)))
-            rmse_te4.append(np.mean(rmse_te3))
+                sum_rmse_te += cross_validation(y, x, k_indices, k, lambda_, degree)[1]
 
-        rmse_te.append(np.min(rmse_te4))
-        best_lambdas.append(lambdas[np.argmin(rmse_te4)])
+            print("Lambda : " + str(lambda_) + " degree : " + str(degree) + " loss : " + str(sum_rmse_te/k_fold))
+            rmse_te_for_degree.append(sum_rmse_te/k_fold)
+
+        rmse_te.append(np.min(rmse_te_for_degree))
+        best_lambdas.append(lambdas[np.argmin(rmse_te_for_degree)])
 
 
     best_rmse = np.min(rmse_te)
     best_lambda = best_lambdas[np.argmin(rmse_te)]
     best_degree = degrees[np.argmin(rmse_te)]
+
+    print("Best lambda : " + str(best_lambda) + " best degree : " + str(best_degree) + " loss : " + str(best_rmse))
 
     return best_degree, best_lambda, best_rmse

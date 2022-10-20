@@ -10,5 +10,5 @@ def compute_loss(y, tx, w):
 def compute_gradient(y, tx, w):
     """Compute the gradient."""
     e = y - tx@w
-    grad = -tx.T@e /len(y)
+    grad = -tx.T@e /y.shape[0]
     return grad

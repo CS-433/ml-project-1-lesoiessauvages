@@ -11,7 +11,7 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     for minibatch_y, minibatch_tx in batch_iter(y, tx, 32):
         <DO-SOMETHING>
     """
-    data_size = len(y)
+    data_size = y.shape[0]
 
     if shuffle:
         shuffle_indices = np.random.permutation(np.arange(data_size))
