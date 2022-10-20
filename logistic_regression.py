@@ -32,7 +32,7 @@ def compute_loss(y, tx, w):
     epsilon = 1e-7
     pred = sigmoid(tx.dot(w))
     loss = y.T.dot(np.log(pred + epsilon)) + (1 - y).T.dot(np.log(1 - pred + epsilon))
-    return np.squeeze(- loss).item()
+    return np.squeeze(- loss).item()#1/2*np.mean()??
 
 
 def compute_gradient(y, tx, w):
@@ -51,7 +51,7 @@ def compute_gradient(y, tx, w):
            [ 1.03425686]])
     """
     pred = sigmoid(tx.dot(w))
-    grad = tx.T.dot(pred - y)
+    grad = tx.T.dot(pred - y)#*1/2??
     return grad
 
 

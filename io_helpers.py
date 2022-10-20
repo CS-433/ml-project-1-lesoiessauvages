@@ -3,24 +3,6 @@ import numpy as np
 
 # IO FUNCTIONS
 
-def load_features(path_dataset):
-    """Load all columns from data, droping the first two."""
-    return np.genfromtxt(path_dataset, delimiter=",", skip_header=1)[:,2:]
-
-def load_labels(path_dataset):
-    """Load second column of data. Translates 'b' into -1 and 's' into 1."""
-    labels = np.genfromtxt(path_dataset, delimiter=",", skip_header=1, usecols=1, dtype=str)
-    labels = np.char.replace(labels, 'b', '0')
-    #labels = np.char.replace(labels, 'b', '0')
-    labels = np.char.replace(labels, 's', '1')
-
-    return labels.astype(int)
-
-def load_ids(path_dataset):
-    """Load first column of data."""
-    ids = np.genfromtxt(path_dataset, delimiter=",", skip_header=1, usecols=0)
-    return ids
-
 def create_csv_submission(ids, y_pred, name):
     """
     Creates an output file in .csv format for submission to Kaggle or AIcrowd
@@ -35,13 +17,26 @@ def create_csv_submission(ids, y_pred, name):
         for r1, r2 in zip(ids, y_pred):
             writer.writerow({'Id':int(r1),'Prediction':int(r2)})
 
+def load_csv_data(data_path, sub_sample=False):
+    """Loads data and returns y (class labels), tX (features) and ids (event ids)"""
+    y = np.genfromtxt(data_path, delimiter=",", skip_header=1, dtype=str, usecols=1)
+    x = np.genfromtxt(data_path, delimiter=",", skip_header=1)
+    ids = x[:, 0].astype(np.int)
+    input_data = x[:, 2:]
+
+    # convert class labels from strings to binary (-1,1)
+    yb = np.ones(len(y))
+    yb[np.where(y == "b")] = -1
+
+    # sub-sample
+    if sub_sample:
+        yb = yb[::50]
+        input_data = input_data[::50]
+        ids = ids[::50]
+
+    return yb, input_data, ids
+
 def save_weights(weights, name):
-    """
-    Creates an output file in .csv format for submission to Kaggle or AIcrowd
-    Arguments: ids (event ids associated with each prediction)
-               y_pred (predicted class labels)
-               name (string name of .csv output file to be created)
-    """
     f = open(name, "w")
     f.write(str(weights))
     f.close()
