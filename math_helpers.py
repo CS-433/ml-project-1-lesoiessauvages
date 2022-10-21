@@ -1,5 +1,6 @@
 import numpy as np
 import linear_regression as linreg
+import logistic_regression as logreg
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
@@ -46,3 +47,14 @@ def roundToPrediction(a):
     a[a < 0.5] = -1
     a[a >= 0.5] = 1
     return a
+
+def roundToPrediction2(a):
+    a[a < 0.5] = 0
+    a[a >= 0.5] = 1
+    return a
+
+def compute_accuracy(y, tx, w):
+    pred = logreg.sigmoid(tx@w)
+    pred = roundToPrediction2(pred)
+    accuracy = np.count_nonzero(pred == y)/y.shape[0]
+    return accuracy

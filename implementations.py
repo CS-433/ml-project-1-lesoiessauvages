@@ -91,42 +91,16 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     """
     w = initial_w
 
-    #test = true
-
     for iter in range(max_iters):
         grad = logreg.compute_gradient(y, tx, w)
         #print("w before : " + str(w))
+        loss = logreg.compute_loss(y, tx, w)
         w -= gamma * grad
         #print("w after : " + str(w))
-        loss = logreg.compute_loss(y, tx, w)
+        #loss = logreg.compute_loss(y, tx, w)
 
-        if iter%50 == 0:
-          print(loss)
-
-
-    test = True
-    last_loss = 0
-    loss= 0
-    i= 1
-
-    #while test:
-    #    grad = logreg.compute_gradient(y, tx, w)
-        #print("w before : " + str(w))
-    #    w -= gamma * grad
-        #print("w after : " + str(w))
-    #    last_loss = loss
-    #    loss = logreg.compute_loss(y, tx, w)
-
-    #    if i%50 == 0:
-    #      print(i)
-    #      print(loss)
-    #    i+=1
-    #    if abs(loss-last_loss) <1e-4:
-    #        test = False
-
-
-
-
+        if (iter%50 == 0 or iter<50):
+            print(loss)
 
 
     return w, loss

@@ -29,10 +29,18 @@ def compute_loss(y, tx, w):
     #print("begin compute loss")
     assert y.shape[0] == tx.shape[0]
     assert tx.shape[1] == w.shape[0]
+
     epsilon = 1e-7
+
+    # print("w : " + str(w))
+    # print("tx@w : " + str(tx@w))
     pred = sigmoid(tx@w)
+    #print("pred(min,max) : " + str(np.min(pred)) + " " + str(np.max(pred)))
+
     loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
-    return np.squeeze(- loss).item()#1/2*np.mean()??
+
+    #return np.squeeze(- loss).item()#1/2*??
+    return 1/2*(-loss.item())
 
 
 def compute_gradient(y, tx, w):
@@ -45,13 +53,13 @@ def compute_gradient(y, tx, w):
 
     Returns:
         a vector of shape (D, 1)
-
-    array([[-0.20741526],
-           [ 0.4134208 ],
-           [ 1.03425686]])
     """
+
+    # print(w.shape)
     pred = sigmoid(tx@w)
-    grad = tx.T@pred - y#*1/2??
+    # print((pred-y).shape)
+    grad = np.mean((pred - y)*tx.T, 1)
+    # print(grad.shape)
     return grad
 
 
