@@ -87,7 +87,7 @@ def split_data(y, x, k_fold, seed=1):
     x_train = x[k_indices, :]
     y_train = y[k_indices]
 
-    return x_test, y_test, x_train, y_train
+    return x_train, y_train, x_test, y_test
 
 
 def best_degree_selection(y, x, degrees, k_fold, lambdas, seed = 1):
