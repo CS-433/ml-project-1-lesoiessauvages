@@ -35,6 +35,12 @@ def build_poly(x, degree):
         output = np.c_[output, x**i]
     return output
 
+def build_poly2(x, degree):
+    """polynomial basis functions for input data x, for j=0 up to j=degree."""
+    output = np.ones(x.shape[0])
+    output = np.c_[output, np.sqrt(np.abs(x))]
+    return output
+
 def standardize(x):
     """Standardize the original data set column-wise."""
     mean_x = np.mean(x, axis=0)

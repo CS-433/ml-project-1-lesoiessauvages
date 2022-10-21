@@ -36,7 +36,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     np.random.seed(1)
 
     w = initial_w
-    batch_size = 100
+    batch_size = 1
     for n_iter in range(max_iters):
         for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size=batch_size, num_batches=1):
             # compute gradient
