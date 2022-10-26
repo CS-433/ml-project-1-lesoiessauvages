@@ -99,7 +99,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         #print("w after : " + str(w))
         #loss = logreg.compute_loss(y, tx, w)
 
-        if (iter%50 == 0 or iter<50):
+        if (iter%50 == 0 or iter<10):
             print(loss)
 
 

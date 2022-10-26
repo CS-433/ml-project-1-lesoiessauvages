@@ -52,24 +52,13 @@ def cross_validation(y, x, k_indices, k, lambda_, degree):
     x_train = x[k_indices, :]
     y_train = y[k_indices]
 
-    # print(x.shape)
-    # print(y.shape)
-    # print(x_test.shape)
-    # print(y_test.shape)
-    # print(x_train.shape)
-    # print(y_train.shape)
 
     # form data with polynomial degree
     phi_tr = build_poly(x_train, degree)
     phi_te = build_poly(x_test, degree)
 
-    # print(phi_tr.shape)
-    # print(phi_te.shape)
-
     # ridge regression
     w, _ = ridge_regression(y_train, phi_tr, lambda_)
-
-    # print(w.shape)
 
     # calculate the loss for train and test data
     loss_tr = np.sqrt(2*linreg.compute_loss(y_train, phi_tr, w))
