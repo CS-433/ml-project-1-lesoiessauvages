@@ -79,14 +79,16 @@ if __name__ == '__main__':
 
     degrees = np.arange(1,3)
     lambdas = np.logspace(-5, 0, 20)
+    gammas = np.logspace(-6, 1, 20)
     #best_degree, best_lambda, best_rmse = best_degree_selection(y_train, x_train, degrees, 4, lambdas)
+    best_degree, best_lambda, best_gamma, best_rmse = best_degree_lambda_gamma_selection(y_train, x_train, degrees, 4, lambdas, gammas)
 
 
 #*****************************
 #CREATE VALIDATION SET
 #*****************************
 
-    phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
+    #phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
 
 
 
@@ -117,7 +119,7 @@ if __name__ == '__main__':
 
 #least_squares
 
-    w, loss = least_squares(y_train, phi_train)
+    #w, loss = least_squares(y_train, phi_train)
 
 #ridge_regression
 
@@ -137,14 +139,14 @@ if __name__ == '__main__':
 #GET VALIDATION SET RESULT
 #*****************************
 
-    tr_accuracy = compute_accuracy(y_train, phi_train, w, zero_and_one)
-    print("Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
+    #tr_accuracy = compute_accuracy(y_train, phi_train, w, zero_and_one)
+    #print("Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
 
-    va_loss = logreg.compute_loss(y_train_va, x_train_va, w)
+    #va_loss = logreg.compute_loss(y_train_va, x_train_va, w)
     #va_loss = linreg.compute_loss(y_train_va, x_train_va, w)
 
-    va_accuracy = compute_accuracy(y_train_va, x_train_va, w, zero_and_one)
-    print("Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
+    #va_accuracy = compute_accuracy(y_train_va, x_train_va, w, zero_and_one)
+    #print("Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
 
 
 
