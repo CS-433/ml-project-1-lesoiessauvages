@@ -174,6 +174,9 @@ def replace_column(tx, y):
 
     new_tx = np.concatenate((tx_0, tx_1, tx_2, tx_3), axis=0)
     new_ty = np.concatenate((y_0, y_1, y_2, y_3), axis=0)
-    indices = np.concatenate((indices_0, indices_1, indices_2, indices_3), axis=0)
+
+
+    indices = np.concatenate((indices_0, indices_1, indices_2, indices_3), axis=1)
+
 
     return new_tx, new_ty, indices

@@ -31,6 +31,7 @@ def compute_loss(y, tx, w):
     assert tx.shape[1] == w.shape[0]
 
     epsilon = 1e-7
+    epsilon = 0
 
     # print("w : " + str(w))
     # print("tx@w : " + str(tx@w))
@@ -39,8 +40,10 @@ def compute_loss(y, tx, w):
 
     loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
 
+    #T - Log(e^t + 1)
+
     #return np.squeeze(- loss).item()#1/2*??
-    return 1/2*(-loss.item())
+    return 1/2*(-loss.item())/y.shape[0]
 
 
 def compute_gradient(y, tx, w):

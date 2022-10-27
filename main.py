@@ -21,7 +21,7 @@ import numpy as np
 if __name__ == '__main__':
 
 
-    zero_and_one = False
+    zero_and_one = True
 
 
 #*****************************
@@ -51,16 +51,16 @@ if __name__ == '__main__':
     #x_test, _ , ids = replace_column(x_test, zeros((x_test.shape[0])))
 
     #replace by median of the feature -999 value
-    #x_train = remove999(x_train)
+    x_train = remove999(x_train)
     #x_test = remove999(x_test)
 
     #standardize by feature
     x_train, _, _ = standardize(x_train)
-    x_test, _, _ = standardize(x_test)
+    #x_test, _, _ = standardize(x_test)
 
     #perform polynomialfeature expansion
     phi_train = build_poly(x_train, degree)
-    phi_test = build_poly(x_test, degree)
+    #phi_test = build_poly(x_test, degree)
 
     #phi_train = x_train
     #phi_test = x_test
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 #CREATE VALIDATION SET
 #*****************************
 
-    phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
+    #phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
 
 
 
@@ -98,13 +98,13 @@ if __name__ == '__main__':
     print("Training model...")
 
 #initiate weigths
-    initial_w = np.random.rand(phi_train.shape[1])
-    #initial_w = np.zeros((phi_train.shape[1]))
+    #initial_w = np.random.rand(phi_train.shape[1])
+    initial_w = np.zeros((phi_train.shape[1]))
     #initial_w = np.ones((phi_train.shape[1]))
 
     lambda_ = 0.01
     max_iters = 500
-    gamma = 0.1
+    gamma = 0.01
 
 
 #least_squares_GD
@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
 #least_squares
 
-    w, loss = least_squares(y_train, phi_train)
+    #w, loss = least_squares(y_train, phi_train)
 
 #ridge_regression
 
@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
 #logistic_regression
 
-    #w, loss = logistic_regression(y_train, phi_train, initial_w, max_iters, gamma)
+    w, loss = logistic_regression(y_train, phi_train, initial_w, max_iters, gamma)
 
 #reg_logistic_regression
 
@@ -137,6 +137,7 @@ if __name__ == '__main__':
 #GET VALIDATION SET RESULT
 #*****************************
 
+    """
     tr_accuracy = compute_accuracy(y_train, phi_train, w, zero_and_one)
     print("Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
 
@@ -145,13 +146,14 @@ if __name__ == '__main__':
 
     va_accuracy = compute_accuracy(y_train_va, x_train_va, w, zero_and_one)
     print("Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
+    """
 
 
 
 #*****************************
 #SEPERATE IN FOR JET FOR SUBMISSION
 #*****************************
-"""
+    """
     x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)
     x_test_jet, indices_jet = separe_in_jet_test(x_test)
     y_test = np.zeros(x_test.shape[0])
@@ -174,14 +176,14 @@ if __name__ == '__main__':
         y_test_i = roundToPrediction(y_test_i)
         y_test[indices[i]] = y_test_i
 
-"""
+        """
 
 
 #*****************************
 #SEPERATE IN FOR JET FOR VALIDATION
 #*****************************
 
-"""
+    """
     tr_accuracy_jet = 0
     va_accuracy_jet = 0
     tr_loss_jet = 0
@@ -220,7 +222,7 @@ if __name__ == '__main__':
     print("4 JET Training loss : " + str(tr_loss_jet) + ", accuracy : " + str(tr_accuracy_jet/tr_total_length))
     print("4 JET Validation loss : " + str(va_accuracy_jet) + ", accuracy : " + str(va_accuracy_jet/va_total_length))
 
-"""
+    """
 
 
 #*****************************
