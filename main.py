@@ -7,6 +7,17 @@ import logistic_regression as logreg
 import numpy as np
 
 
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
 
 
@@ -33,19 +44,28 @@ if __name__ == '__main__':
 #DATA PREPROCESSING
 #*****************************
 
+    degree = 2
+
     #replace column, per jet_num, that are undefinided for the corrsponding jet with 0 value
-    #x_train, y_train = replace_column(x_train, y_train)
+    #x_train, y_train, _ = replace_column(x_train, y_train)
+    #x_test, _ , ids = replace_column(x_test, zeros((x_test.shape[0])))
 
     #replace by median of the feature -999 value
     #x_train = remove999(x_train)
+    #x_test = remove999(x_test)
 
     #standardize by feature
     x_train, _, _ = standardize(x_train)
-    #x_test, _, _ = standardize(x_test)
+    x_test, _, _ = standardize(x_test)
 
     #perform polynomialfeature expansion
-    phi_train = build_poly(x_train, 2)
-    #phi_test = build_poly(x_test, 2)
+    phi_train = build_poly(x_train, degree)
+    phi_test = build_poly(x_test, degree)
+
+    #phi_train = x_train
+    #phi_test = x_test
+
+
 
 
 
@@ -66,7 +86,7 @@ if __name__ == '__main__':
 #CREATE VALIDATION SET
 #*****************************
 
-    phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 2)
+    phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
 
 
 
@@ -79,8 +99,8 @@ if __name__ == '__main__':
 
 #initiate weigths
     initial_w = np.random.rand(phi_train.shape[1])
-    #initial_w = np.zeros((phi_train.shape[1])
-    #initial_w = np.ones((phi_train.shape[1])
+    #initial_w = np.zeros((phi_train.shape[1]))
+    #initial_w = np.ones((phi_train.shape[1]))
 
     lambda_ = 0.01
     max_iters = 500
@@ -127,6 +147,82 @@ if __name__ == '__main__':
     print("Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
 
 
+
+#*****************************
+#SEPERATE IN FOR JET FOR SUBMISSION
+#*****************************
+"""
+    x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)
+    x_test_jet, indices_jet = separe_in_jet_test(x_test)
+    y_test = np.zeros(x_test.shape[0])
+
+    for i in range(4):
+
+        x_train = x_train_jet[i]
+        y_train = y_train_jet[i]
+
+        x_train = remove999(x_train)
+        x_train, _, _ = standardize(x_train)
+        phi_train = build_poly(x_train, degree)
+        w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
+
+        x_test_i = x_test_jet[i]
+        x_test_i = remove999(x_test_i)
+        x_test_i, _, _ = standardize(x_test_i)
+        x_test_i = build_poly(x_test_i, degree)
+        y_test_i = logreg.sigmoid(x_test_i@w)
+        y_test_i = roundToPrediction(y_test_i)
+        y_test[indices[i]] = y_test_i
+
+"""
+
+
+#*****************************
+#SEPERATE IN FOR JET FOR VALIDATION
+#*****************************
+
+"""
+    tr_accuracy_jet = 0
+    va_accuracy_jet = 0
+    tr_loss_jet = 0
+    va_loss_jet = 0
+    tr_total_length = 0
+    va_total_length = 0
+
+    x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)
+
+    for i in range(4):
+
+        x_train = x_train_jet[i]
+        y_train = y_train_jet[i]
+
+        x_train = remove999(x_train)
+        x_train, _, _ = standardize(x_train)
+        phi_train = build_poly(x_train, degree)
+        x_train_tr_i, y_train_tr_i, x_train_va_i, y_train_va_i = split_data(y_train, phi_train, 5, 1)
+
+        w, tr_loss = logistic_regression(y_train_tr_i, x_train_tr_i, initial_w, max_iter, gamma)
+        tr_loss_jet += tr_loss
+        tr_accuracy = compute_accuracy(y_train_tr_i, x_train_tr_i, w2)
+        tr_accuracy_jet += (tr_accuracy*len(y_train_tr_i))
+
+        va_loss = logreg.compute_loss(y_train_va_i, x_train_va_i, w2)
+        va_loss_jet += va_loss
+        va_accuracy = compute_accuracy(y_train_va_i, x_train_va_i, w2)
+        va_accuracy_jet += (va_accuracy*len(y_train_va_i))
+
+        tr_total_length += len(y_train_tr_i)
+        va_total_length += len(y_train_va_i)
+        print(str(i) + " : 4 JET Training loss : " + str(tr_loss) + ", accuracy : " + str(tr_accuracy))
+        print(str(i) + " : 4 JET Validation loss : " + str(va_loss_jet) + ", accuracy : " + str(va_accuracy))
+
+
+    print("4 JET Training loss : " + str(tr_loss_jet) + ", accuracy : " + str(tr_accuracy_jet/tr_total_length))
+    print("4 JET Validation loss : " + str(va_accuracy_jet) + ", accuracy : " + str(va_accuracy_jet/va_total_length))
+
+"""
+
+
 #*****************************
 #PREDICTION
 #*****************************
@@ -145,90 +241,12 @@ if __name__ == '__main__':
 
 
 
-    """
-    txs, ys, indices = separe_in_jet(x_train2, y_train2)
-    txs_test, indices_test = separe_in_jet_test(x_test)
-    y_test = np.zeros(x_test.shape[0])
+#*****************************
+#WRITE RESULT
+#*****************************
 
-    for i in range(4):
-
-        x_train = txs[i]
-        y_train2 = ys[i]
-
-        x_train = remove999(x_train)
-        x_train, _, _ = standardize(x_train)
-        phi_train = build_poly(x_train, 2)
-        initial_w = np.random.rand(phi_train.shape[1])
-        w2, loss = logistic_regression(y_train2, phi_train, initial_w, 500, 0.1)
-
-        x_test_i = txs_test[i]
-        x_test_i = remove999(x_test_i)
-        x_test_i, _, _ = standardize(x_test_i)
-        x_test_i = build_poly(x_test_i, 2)
-        y_test_i = logreg.sigmoid(x_test_i@w2)
-        y_test_i = roundToPrediction(y_test_i)
-        y_test[indices_test[i]] = y_test_i
-
-
-
-
-
-
-
-    create_csv_submission(ids, y_test, "o.csv")
-
-
-    tr_accuracy_jet = 0
-    va_accuracy_jet = 0
-    tr_loss_jet = 0
-    va_loss_jet = 0
-    tr_total_length = 0
-    va_total_length = 0
-
-
-
-    for i in range(4):
-
-        x_train = txs[i]
-        y_train = ys[i]
-
-        x_train = remove999(x_train)
-        x_train, _, _ = standardize(x_train)
-        phi_train = build_poly(x_train, 2)
-        x_train_tr_i, y_train_tr_i, x_train_va_i, y_train_va_i = split_data(y_train, phi_train, 5, 2)
-        initial_w = np.random.rand(x_train_tr_i.shape[1])
-        w2, loss = logistic_regression(y_train_tr_i, x_train_tr_i, initial_w, 500, 0.1)
-        tr_loss_jet += loss
-        tr_accuracy = compute_accuracy(y_train_tr_i, x_train_tr_i, w2)
-        tr_accuracy_jet += (tr_accuracy*len(y_train_tr_i))
-        va_loss = logreg.compute_loss(y_train_va_i, x_train_va_i, w2)
-        va_loss_jet += va_loss
-        va_accuracy = compute_accuracy(y_train_va_i, x_train_va_i, w2)
-        va_accuracy_jet += (va_accuracy*len(y_train_va_i))
-        tr_total_length += len(y_train_tr_i)
-        va_total_length += len(y_train_va_i)
-        print(str(i) + " : 4 JET Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
-        print(str(i) + " : 4 JET Validation loss : " + str(va_loss_jet) + ", accuracy : " + str(va_accuracy))
-
-
-    print("4 JET Training loss : " + str(tr_loss_jet) + ", accuracy : " + str(tr_accuracy_jet/tr_total_length))
-    print("4 JET Validation loss : " + str(va_accuracy_jet) + ", accuracy : " + str(va_accuracy_jet/va_total_length))
-
-
-
-
-
-
-
-
-
-
-
-
-    save_weights(w, "weights.txt")
+    #save_weights(w, "weights.txt")
     #create_csv_submission(ids, y_test, "o.csv")
 
-
-    """
 
     print('\a')

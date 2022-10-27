@@ -154,13 +154,17 @@ def replace_column(tx, y):
 
     tx_0 = tx[jets == 0]
     tx_0[:, [4, 5, 6, 12, 23, 24, 25, 26, 27, 28, 29]] = 0
+    indices_0 = np.asarray(jets == 0).nonzero()
 
     tx_1 = tx[jets == 1]
     tx_1[:, [4, 5, 6, 12, 26, 27, 28]] = 0
+    indices_1 = np.asarray(jets == 1).nonzero()
 
     tx_2 = tx[jets == 2]
+    indices_2 = np.asarray(jets == 2).nonzero()
 
     tx_3 = tx[jets == 3]
+    indices_3 = np.asarray(jets == 3).nonzero()
 
 
     y_0 = y[jets == 0]
@@ -168,9 +172,8 @@ def replace_column(tx, y):
     y_2 = y[jets == 2]
     y_3 = y[jets == 3]
 
-
     new_tx = np.concatenate((tx_0, tx_1, tx_2, tx_3), axis=0)
     new_ty = np.concatenate((y_0, y_1, y_2, y_3), axis=0)
+    indices = np.concatenate((indices_0, indices_1, indices_2, indices_3), axis=0)
 
-
-    return new_tx, new_ty
+    return new_tx, new_ty, indices
