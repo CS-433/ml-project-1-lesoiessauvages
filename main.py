@@ -20,7 +20,6 @@ import numpy as np
 
 if __name__ == '__main__':
 
-
     zero_and_one = True
 
 
@@ -47,7 +46,7 @@ if __name__ == '__main__':
     degree = 2
 
     #replace column, per jet_num, that are undefinided for the corrsponding jet with 0 value
-    #x_train, y_train, _ = replace_column(x_train, y_train)
+    x_train, y_train, _ = replace_column(x_train, y_train)
     #x_test, _ , ids = replace_column(x_test, zeros((x_test.shape[0])))
 
     #replace by median of the feature -999 value
@@ -59,7 +58,7 @@ if __name__ == '__main__':
     #x_test, _, _ = standardize(x_test)
 
     #perform polynomialfeature expansion
-    phi_train = build_poly(x_train, degree)
+    phi_train = build_poly3(x_train, degree)
     #phi_test = build_poly(x_test, degree)
 
     #phi_train = x_train

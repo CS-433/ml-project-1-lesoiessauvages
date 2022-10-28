@@ -4,7 +4,6 @@ import linear_regression as linreg
 import logistic_regression as logreg
 import seaborn as sns
 import matplotlib.pyplot as plt
-%matplotlib
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
@@ -57,6 +56,7 @@ def build_poly3(x, degree, k_corr=30):
     R1 = np.abs(np.corrcoef(x.T))
 
     sns.heatmap(R1)
+    plt.show()
 
 
     R1 = np.where(np.tril(R1)==0,R1, 1)

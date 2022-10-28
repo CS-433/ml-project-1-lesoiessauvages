@@ -99,8 +99,8 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         #print("w after : " + str(w))
         #loss = logreg.compute_loss(y, tx, w)
 
-        if (iter%50 == 0 or iter<10):
-            print(loss)
+        # if (iter%50 == 0 or iter<10):
+        #     print(loss)
 
 
     return w, loss
@@ -121,6 +121,6 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         grad = logreg.penalized_logistic_regression_gradient(y, tx, w, lambda_)
         w -= gamma * grad
         loss = logreg.penalized_logistic_regression_loss(y, tx, w, lambda_)
-        print(loss)
+        # print(loss)
 
     return w, loss
