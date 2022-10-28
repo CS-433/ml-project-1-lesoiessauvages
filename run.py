@@ -20,7 +20,7 @@ import numpy as np
 
 if __name__ == '__main__':
 
-    zero_and_one = False
+    zero_and_one = True
 
 
 #*****************************
@@ -219,19 +219,19 @@ if __name__ == '__main__':
         x_train = remove999_withmedian(x_train)
         x_train, _, _ = standardize(x_train)
 
-        phi_train = build_poly(x_train, 2)
+        phi_train = build_poly(x_train, 2, 200)
         #phi_train = x_train
-        initial_w = np.ones((phi_train.shape[1]))
+        initial_w = np.zeros((phi_train.shape[1]))
 
 
         x_train_tr_i, y_train_tr_i, x_train_va_i, y_train_va_i = split_data(y_train, phi_train, 5, 1)
 
-        w, tr_loss = least_squares_GD(y_train_tr_i, x_train_tr_i, initial_w, 20000,0.00006)
+        w, tr_loss = reg_logistic_regression(y_train_tr_i, x_train_tr_i, lambda_, initial_w, max_iter, gamma)
         tr_loss_jet += (tr_loss*len(y_train_tr_i))
         tr_accuracy = compute_accuracy(y_train_tr_i, x_train_tr_i, w, zero_and_one)
         tr_accuracy_jet += (tr_accuracy*len(y_train_tr_i))
 
-        va_loss = linreg.compute_loss(y_train_va_i, x_train_va_i, w)
+        va_loss = logreg.compute_loss(y_train_va_i, x_train_va_i, w)
         va_loss_jet += (va_loss*len(y_train_va_i))
         va_accuracy = compute_accuracy(y_train_va_i, x_train_va_i, w, zero_and_one)
         va_accuracy_jet += (va_accuracy*len(y_train_va_i))

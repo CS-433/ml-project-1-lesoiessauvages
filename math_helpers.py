@@ -78,7 +78,7 @@ def standardize(x):
 def roundToPrediction(a, zero_and_one):
 
     if zero_and_one :
-        a[a < 0.5] = 0
+        a[a < 0.5] = -1
         a[a >= 0.5] = 1
     else :
         a[a < 0] = -1
