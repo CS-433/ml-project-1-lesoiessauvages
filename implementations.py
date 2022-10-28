@@ -20,8 +20,9 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         #compute loss
         loss = linreg.compute_loss(y, tx, w)
 
-        ##print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
-              ##bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
+        if(n_iter%50==0):
+            print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
+                bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
 
     return w, loss
 
@@ -60,6 +61,8 @@ def least_squares(y, tx):
         loss : coresponding loss
     """
 
+
+    print(tx)
     a = tx.T@tx
     b = tx.T@y
     w = np.linalg.solve(a, b)

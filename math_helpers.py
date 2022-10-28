@@ -44,12 +44,11 @@ def build_poly2(x, degree):
 
 
 def build_poly(x, degree, k_corr=0):
-    """polynomial basis functions for input data x, for j=0 up to j=degree."""
+    """polynomial basis functions for input data x, for j=0 up to j=degree.
+    + multiplication of k_corr least corellated features."""
     output = np.ones(x.shape[0])
     for i in range(1, degree+1):
         output = np.c_[output, x**i]
-
-
 
     R1 = np.abs(np.corrcoef(x.T))
 

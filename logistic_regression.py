@@ -35,16 +35,11 @@ def compute_loss(y, tx, w):
 
     ### CLASSICAL VERSION OF THE FORMULA
     pred = sigmoid(tx@w)
-    #loss = y.T@np.log(pred) + (1 - y).T@np.log(1 - pred)
 
 
     ### VERSION WITH EPSILON TO AVOID INVALID VALUES
     loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
 
-
-
-
-    #T - Log(e^t + 1)
 
     return 1/2*(-loss.item())/y.shape[0]
 
