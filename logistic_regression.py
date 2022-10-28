@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def sigmoid(t):
     """apply sigmoid function on t.
 
@@ -30,19 +31,20 @@ def compute_loss(y, tx, w):
     assert y.shape[0] == tx.shape[0]
     assert tx.shape[1] == w.shape[0]
 
-    epsilon = 1e-7
-    #epsilon = 0
+    #epsilon = 1e-7
+    epsilon = 0
 
-    # print("w : " + str(w))
-    # print("tx@w : " + str(tx@w))
+    #pred = tx@w
     pred = sigmoid(tx@w)
-    #print("pred(min,max) : " + str(np.min(pred)) + " " + str(np.max(pred)))
 
-    loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
+    loss = y.T@np.log(pred) + (1 - y).T@np.log(1 - pred)
+
+    #loss = y.T@(pred - np.log(np.exp(pred)+1)) + (1 - y).T@(-np.log(1+np.exp(pred)))
+
+
 
     #T - Log(e^t + 1)
 
-    #return np.squeeze(- loss).item()#1/2*??
     return 1/2*(-loss.item())/y.shape[0]
 
 

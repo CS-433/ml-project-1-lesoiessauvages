@@ -81,7 +81,7 @@ if __name__ == '__main__':
     lambdas = np.logspace(-5, 0, 10)
     gammas = np.logspace(-6, 1, 10)
     #best_degree, best_lambda, best_rmse = best_degree_selection(y_train, x_train, degrees, 4, lambdas)
-    best_degree, best_lambda, best_gamma, best_rmse = best_degree_lambda_gamma_selection(y_train, x_train, degrees, 4, lambdas, gammas)
+    #best_degree, best_lambda, best_gamma, best_rmse = best_degree_lambda_gamma_selection(y_train, x_train, degrees, 4, lambdas, gammas)
 
 
 #*****************************
@@ -100,6 +100,7 @@ if __name__ == '__main__':
     print("Training model...")
 
 #initiate weigths
+    np.random.seed(1)
     #initial_w = np.random.rand(phi_train.shape[1])
     initial_w = np.zeros((phi_train.shape[1]))
     #initial_w = np.ones((phi_train.shape[1]))
@@ -131,7 +132,7 @@ if __name__ == '__main__':
 
 #reg_logistic_regression
 
-    #w, loss = reg_logistic_regression(y_train, phi_train, lambda_, initial_w, max_iters, gamma)
+    w, loss = reg_logistic_regression(y_train, phi_train, lambda_, initial_w, max_iters, gamma)
 
 
 

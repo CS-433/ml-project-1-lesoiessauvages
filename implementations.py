@@ -121,6 +121,6 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         grad = logreg.penalized_logistic_regression_gradient(y, tx, w, lambda_)
         w -= gamma * grad
         loss = logreg.penalized_logistic_regression_loss(y, tx, w, lambda_)
-        #print(loss)
+        print(loss)
 
     return w, loss
