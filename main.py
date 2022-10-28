@@ -117,7 +117,7 @@ if __name__ == '__main__':
     #initial_w = np.zeros((phi_train.shape[1]))
     #initial_w = np.ones((phi_train.shape[1]))
 
-    lambda_ = 0.001
+    lambda_ = 0.01
     max_iter = 1000
     gamma = 0.1
 
@@ -218,7 +218,7 @@ if __name__ == '__main__':
         x_train = remove999_withmedian(x_train)
         x_train, _, _ = standardize(x_train)
 
-        phi_train = build_poly(x_train, 2, 60)
+        phi_train = build_poly(x_train, 2, 200)
         #phi_train = x_train
         initial_w = np.zeros((phi_train.shape[1]))
 
