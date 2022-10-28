@@ -2,6 +2,9 @@ import numpy as np
 import math as math
 import linear_regression as linreg
 import logistic_regression as logreg
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
@@ -40,6 +43,34 @@ def build_poly2(x, degree):
     output = np.ones(x.shape[0])
     output = np.c_[output, np.sqrt(np.abs(x))]
     return output
+
+
+def build_poly3(x, degree, k_corr=30):
+    """polynomial basis functions for input data x, for j=0 up to j=degree."""
+    output = np.ones(x.shape[0])
+    for i in range(1, degree+1):
+        output = np.c_[output, x**i]
+
+    plt.figure(figsize = (10,6))
+
+
+    R1 = np.abs(np.corrcoef(x.T))
+
+    sns.heatmap(R1)
+
+
+    R1 = np.where(np.tril(R1)==0,R1, 1)
+    argsort = np.argpartition(R1, k_corr, axis=None)
+
+    for i in range(k_corr):
+        a = int(np.floor(argsort[i]/x.shape[1]))
+        b = argsort[i]%x.shape[1]
+        output = np.c_[output, x[:,a]*x[:,b]]
+
+    return output
+
+
+
 
 def standardize(x):
     """Standardize the original data set column-wise."""
