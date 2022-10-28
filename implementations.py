@@ -91,19 +91,41 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     """
     w = initial_w
 
-    for iter in range(max_iters):
+    iter = 0
+    loss = 1000
+    ancien_loss = 2000
+    while np.abs(loss-ancien_loss) > (2e-6) :
         grad = logreg.compute_gradient(y, tx, w)
         #print("w before : " + str(w))
+
+        ancien_loss = loss
         loss = logreg.compute_loss(y, tx, w)
         w -= gamma * grad
         #print("w after : " + str(w))
         #loss = logreg.compute_loss(y, tx, w)
-
-        # if (iter%50 == 0 or iter<10):
-        #     print(loss)
-
+        iter+=1
+        if (iter%50 == 0 or iter<10):
+            print("iter : " + str(iter) + ", loss : " + str(loss))
+            print("             " +  str(np.abs(loss-ancien_loss)))
 
     return w, loss
+
+
+
+
+
+    # for iter in range(max_iters):
+    #     grad = logreg.compute_gradient(y, tx, w)
+    #     #print("w before : " + str(w))
+    #     loss = logreg.compute_loss(y, tx, w)
+    #     w -= gamma * grad
+    #     #print("w after : " + str(w))
+    #     #loss = logreg.compute_loss(y, tx, w)
+    #
+    #     if (iter%50 == 0 or iter<10):
+    #         print("iter : " + str(iter) + ", loss : " + str(loss))
+
+
 
 
 
@@ -114,7 +136,34 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         w : Last weight vector
         loss : coresponding loss
     """
+
+
+
     w = initial_w
+
+    iter = 0
+    loss = 1000
+    ancien_loss = 2000
+    while np.abs(loss-ancien_loss) > (2e-6) :
+        grad = logreg.penalized_logistic_regression_gradient(y, tx, w, lambda_)
+        #print("w before : " + str(w))
+
+        ancien_loss = loss
+        loss = logreg.penalized_logistic_regression_loss(y, tx, w, lambda_)
+        w -= gamma * grad
+        #print("w after : " + str(w))
+        #loss = logreg.compute_loss(y, tx, w)
+        iter+=1
+        if (iter%50 == 0 or iter<10):
+            print("iter : " + str(iter) + ", loss : " + str(loss))
+            print("             " +  str(np.abs(loss-ancien_loss)))
+
+    return w, loss
+    """
+
+    w = initial_w
+
+
 
     for iter in range(max_iters):
 
@@ -124,3 +173,4 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         # print(loss)
 
     return w, loss
+    """

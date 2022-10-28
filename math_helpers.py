@@ -2,8 +2,7 @@ import numpy as np
 import math as math
 import linear_regression as linreg
 import logistic_regression as logreg
-import seaborn as sns
-import matplotlib.pyplot as plt
+
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
@@ -31,7 +30,7 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
 
-def build_poly(x, degree):
+def build_poly3(x, degree):
     """polynomial basis functions for input data x, for j=0 up to j=degree."""
     output = np.ones(x.shape[0])
     for i in range(1, degree+1):
@@ -44,28 +43,25 @@ def build_poly2(x, degree):
     return output
 
 
-def build_poly3(x, degree, k_corr=30):
+def build_poly(x, degree, k_corr=0):
     """polynomial basis functions for input data x, for j=0 up to j=degree."""
     output = np.ones(x.shape[0])
     for i in range(1, degree+1):
         output = np.c_[output, x**i]
 
-    plt.figure(figsize = (10,6))
 
 
     R1 = np.abs(np.corrcoef(x.T))
 
-    sns.heatmap(R1)
-    plt.show()
+    if k_corr != 0 :
 
+        R1 = np.where(np.tril(R1)==0,R1, 1)
+        argsort = np.argpartition(R1, k_corr, axis=None)
 
-    R1 = np.where(np.tril(R1)==0,R1, 1)
-    argsort = np.argpartition(R1, k_corr, axis=None)
-
-    for i in range(k_corr):
-        a = int(np.floor(argsort[i]/x.shape[1]))
-        b = argsort[i]%x.shape[1]
-        output = np.c_[output, x[:,a]*x[:,b]]
+        for i in range(k_corr):
+            a = int(np.floor(argsort[i]/x.shape[1]))
+            b = argsort[i]%x.shape[1]
+            output = np.c_[output, x[:,a]*x[:,b]]
 
     return output
 
@@ -103,7 +99,29 @@ def compute_accuracy(y, tx, w, zero_and_one):
     return accuracy
 
 
-def remove999(tx):
+def remove999_with0(tx):
+
+    a = tx
+    a[a == -999] = 0
+
+    return a
+
+
+def remove999_withmean(tx):
+
+    a = tx
+    a[a == -999] = math.nan
+    col_mean = np.nanmean(a, axis=0)
+    #col_mean = np.zeros(col_mean.shape)
+    #Find indices that you need to replace
+    inds = np.where(np.isnan(a))
+    #Place column means in the indices. Align the arrays using take
+    a[inds] = np.take(col_mean, inds[1])
+
+    return a
+
+
+def remove999_withmedian(tx):
 
     a = tx
     a[a == -999] = math.nan

@@ -90,11 +90,11 @@ def cross_validation_lambda_degree_gamma(y, x, k_indices, k, lambda_, degree, ga
     phi_tr = build_poly(x_train, degree)
     phi_te = build_poly(x_test, degree)
 
-    max_iters = 30
+    max_iters = 100
     initial_w = np.ones(phi_tr.shape[1])
 
     # ridge regression
-    w, _ = reg_logistic_regression(y_train, phi_tr, lambda_, initial_w, max_iters, gamma)
+    w, _ = least_squares_GD(y_train, phi_tr, initial_w, max_iters, gamma)
 
     # calculate the loss for train and test data
     loss_te = np.sqrt(2*logreg.compute_loss(y_test, phi_te, w))
