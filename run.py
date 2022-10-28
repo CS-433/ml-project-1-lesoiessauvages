@@ -11,8 +11,72 @@ import numpy as np
 
 
 
+def sigmoid2(t):
+    """apply sigmoid function on t.
+    Args:
+        t: scalar or numpy array
+    Returns:
+        scalar or numpy array
+    """
+    return 1.0 / (1 + np.exp(-t))
 
 
+def compute_loss2(y, tx, w):
+    """compute the cost by negative log likelihood.
+
+    Args:
+        y:  shape=(N, 1)
+        tx: shape=(N, D)
+        w:  shape=(D, 1)
+
+    Returns:
+        a non-negative loss
+
+    """
+    #print("begin compute loss")
+    assert y.shape[0] == tx.shape[0]
+    assert tx.shape[1] == w.shape[0]
+
+    ### CLASSICAL VERSION OF THE FORMULA
+    pred = sigmoid2(tx@w)
+
+    ### VERSION WITH EPSILON TO AVOID INVALID VALUES
+    epsilon = 1e-7
+    loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
+
+    return 1/2*(-loss.item())/y.shape[0]
+
+
+def compute_gradient2(y, tx, w):
+    """compute the gradient of loss.
+
+    Args:
+        y:  shape=(N, 1)
+        tx: shape=(N, D)
+        w:  shape=(D, 1)
+
+    Returns:
+        a vector of shape (D, 1)
+    """
+    pred = sigmoid2(tx@w)
+    grad = np.mean((pred - y)*tx.T, 1)
+    return grad
+
+
+
+def logistic_regression2(y, tx, initial_w, max_iters, gamma):
+    """Logistic regression using gradient descent or SGD (y ∈ {0, 1}).
+    Returns :
+        w : Last weight vector
+        loss : coresponding loss
+    """
+    w = initial_w
+
+    for iter in range(max_iters):
+        grad = compute_gradient2(y, tx, w)
+        loss = compute_loss2(y, tx, w)
+        w -= gamma * grad
+    return w, loss
 
 
 
@@ -184,7 +248,7 @@ if __name__ == '__main__':
         x_train, _, _ = normalize(x_train)
         phi_train = build_poly(x_train, degree, k_corr)
         initial_w = np.zeros(phi_train.shape[1])
-        w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
+        w, loss = logistic_regression2(y_train, phi_train, initial_w, max_iter, gamma)
 
         x_test_i = x_test_jet[i]
         x_test_i = remove999_withmedian(x_test_i)
