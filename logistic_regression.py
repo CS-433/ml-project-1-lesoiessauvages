@@ -32,14 +32,14 @@ def compute_loss(y, tx, w):
     assert tx.shape[1] == w.shape[0]
 
     #epsilon = 1e-7
-    epsilon = 0
 
-    #pred = tx@w
+    ### CLASSICAL VERSION OF THE FORMULA
     pred = sigmoid(tx@w)
-
     loss = y.T@np.log(pred) + (1 - y).T@np.log(1 - pred)
 
-    #loss = y.T@(pred - np.log(np.exp(pred)+1)) + (1 - y).T@(-np.log(1+np.exp(pred)))
+
+    # loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
+
 
 
 
