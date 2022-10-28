@@ -31,20 +31,16 @@ def compute_loss(y, tx, w):
     assert y.shape[0] == tx.shape[0]
     assert tx.shape[1] == w.shape[0]
 
-    epsilon = 1e-7
+
 
     ### CLASSICAL VERSION OF THE FORMULA
     pred = sigmoid(tx@w)
-    #loss = y.T@np.log(pred) + (1 - y).T@np.log(1 - pred)
-
 
     ### VERSION WITH EPSILON TO AVOID INVALID VALUES
-    loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
+    #epsilon = 1e-7
+    #loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
 
-
-
-
-    #T - Log(e^t + 1)
+    loss = y.T@np.log(pred) + (1 - y).T@np.log(1 - pred)
 
     return 1/2*(-loss.item())/y.shape[0]
 
@@ -61,11 +57,11 @@ def compute_gradient(y, tx, w):
         a vector of shape (D, 1)
     """
 
-    # print(w.shape)
+
     pred = sigmoid(tx@w)
-    # print((pred-y).shape)
+
     grad = np.mean((pred - y)*tx.T, 1)
-    # print(grad.shape)
+
     return grad
 
 

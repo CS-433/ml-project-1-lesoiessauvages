@@ -20,9 +20,6 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         #compute loss
         loss = linreg.compute_loss(y, tx, w)
 
-        ##print("Gradient Descent({bi}/{ti}): loss={l}, w0={w0}, w1={w1}".format(
-              ##bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]))
-
     return w, loss
 
 
@@ -46,9 +43,6 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
             #compute loss
             loss = linreg.compute_loss(minibatch_y, minibatch_tx, w)
             print(loss)
-            ##if(loss < 0.001):
-                ##return w, loss
-
 
     return w, loss
 
@@ -79,7 +73,6 @@ def ridge_regression(y, tx, lambda_):
     w = np.linalg.solve(a, b)
     loss = linreg.compute_loss(y, tx, w)
 
-    #print(loss)
     return w, loss
 
 
@@ -91,41 +84,11 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     """
     w = initial_w
 
-    iter = 0
-    loss = 1000
-    ancien_loss = 2000
-    while np.abs(loss-ancien_loss) > (2e-6) :
+    for iter in range(max_iters):
         grad = logreg.compute_gradient(y, tx, w)
-        #print("w before : " + str(w))
-
-        ancien_loss = loss
         loss = logreg.compute_loss(y, tx, w)
         w -= gamma * grad
-        #print("w after : " + str(w))
-        #loss = logreg.compute_loss(y, tx, w)
-        iter+=1
-        if (iter%50 == 0 or iter<10):
-            print("iter : " + str(iter) + ", loss : " + str(loss))
-            print("             " +  str(np.abs(loss-ancien_loss)))
-
     return w, loss
-
-
-
-
-
-    # for iter in range(max_iters):
-    #     grad = logreg.compute_gradient(y, tx, w)
-    #     #print("w before : " + str(w))
-    #     loss = logreg.compute_loss(y, tx, w)
-    #     w -= gamma * grad
-    #     #print("w after : " + str(w))
-    #     #loss = logreg.compute_loss(y, tx, w)
-    #
-    #     if (iter%50 == 0 or iter<10):
-    #         print("iter : " + str(iter) + ", loss : " + str(loss))
-
-
 
 
 
@@ -137,40 +100,12 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         loss : coresponding loss
     """
 
-
-
     w = initial_w
-
-    iter = 0
-    loss = 1000
-    ancien_loss = 2000
-    while np.abs(loss-ancien_loss) > (2e-6) :
-        grad = logreg.penalized_logistic_regression_gradient(y, tx, w, lambda_)
-        #print("w before : " + str(w))
-
-        ancien_loss = loss
-        loss = logreg.penalized_logistic_regression_loss(y, tx, w, lambda_)
-        w -= gamma * grad
-        #print("w after : " + str(w))
-        #loss = logreg.compute_loss(y, tx, w)
-        iter+=1
-        if (iter%50 == 0 or iter<10):
-            print("iter : " + str(iter) + ", loss : " + str(loss))
-            print("             " +  str(np.abs(loss-ancien_loss)))
-
-    return w, loss
-    """
-
-    w = initial_w
-
-
 
     for iter in range(max_iters):
 
         grad = logreg.penalized_logistic_regression_gradient(y, tx, w, lambda_)
         w -= gamma * grad
         loss = logreg.penalized_logistic_regression_loss(y, tx, w, lambda_)
-        # print(loss)
 
     return w, loss
-    """
