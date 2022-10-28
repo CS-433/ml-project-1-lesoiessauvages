@@ -30,12 +30,6 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
 
-def build_poly3(x, degree):
-    """polynomial basis functions for input data x, for j=0 up to j=degree."""
-    output = np.ones(x.shape[0])
-    for i in range(1, degree+1):
-        output = np.c_[output, x**i]
-    return output
 
 
 def build_poly(x, degree, k_corr=0):
@@ -82,6 +76,18 @@ def roundToPrediction(a, logistic_model):
     return a
 
 
+def roundToPredictionForAccuracy(a, logistic_model):
+    """Step function to clip output."""
+
+    if logistic_model :
+        a[a < 0.5] = 0
+        a[a >= 0.5] = 1
+    else :
+        a[a < 0] = -1
+        a[a >= 0] = 1
+    return a
+
+
 
 def compute_accuracy(y, tx, w, logistic_model):
 
@@ -89,7 +95,7 @@ def compute_accuracy(y, tx, w, logistic_model):
         pred = logreg.sigmoid(tx@w)
     else :
         pred = tx@w
-    pred = roundToPrediction(pred, logistic_model)
+    pred = roundToPredictionForAccuracy(pred, logistic_model)
     accuracy = np.count_nonzero(pred == y)/y.shape[0]
     return accuracy
 
