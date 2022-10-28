@@ -78,8 +78,8 @@ if __name__ == '__main__':
 #*****************************
 
     degrees = np.arange(1,3)
-    lambdas = np.logspace(-5, 0, 20)
-    gammas = np.logspace(-6, 1, 20)
+    lambdas = np.logspace(-5, 0, 10)
+    gammas = np.logspace(-6, 1, 10)
     #best_degree, best_lambda, best_rmse = best_degree_selection(y_train, x_train, degrees, 4, lambdas)
     best_degree, best_lambda, best_gamma, best_rmse = best_degree_lambda_gamma_selection(y_train, x_train, degrees, 4, lambdas, gammas)
 
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
 #logistic_regression
 
-    w, loss = logistic_regression(y_train, phi_train, initial_w, max_iters, gamma)
+    #w, loss = logistic_regression(y_train, phi_train, initial_w, max_iters, gamma)
 
 #reg_logistic_regression
 

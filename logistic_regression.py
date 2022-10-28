@@ -31,7 +31,7 @@ def compute_loss(y, tx, w):
     assert tx.shape[1] == w.shape[0]
 
     epsilon = 1e-7
-    epsilon = 0
+    #epsilon = 0
 
     # print("w : " + str(w))
     # print("tx@w : " + str(tx@w))
@@ -68,10 +68,10 @@ def compute_gradient(y, tx, w):
 
 def penalized_logistic_regression_gradient(y, tx, w, lambda_):
 
-    gradient = calculate_gradient(y, tx, w) + 2 * lambda_ * w
+    gradient = compute_gradient(y, tx, w) + 2 * lambda_ * w
     return gradient
 
 def penalized_logistic_regression_loss(y, tx, w, lambda_):
 
-    loss = calculate_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
+    loss = compute_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
     return loss

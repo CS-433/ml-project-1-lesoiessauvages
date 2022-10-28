@@ -37,7 +37,6 @@ def build_poly(x, degree):
     return output
 
 def build_poly2(x, degree):
-    """polynomial basis functions for input data x, for j=0 up to j=degree."""
     output = np.ones(x.shape[0])
     output = np.c_[output, np.sqrt(np.abs(x))]
     return output

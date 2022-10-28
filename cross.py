@@ -81,7 +81,7 @@ def cross_validation_lambda_degree_gamma(y, x, k_indices, k, lambda_, degree, ga
         gamma:      scalar, cf. gradient descent
 
     Returns:
-        train and test root mean square errors rmse = sqrt(2 mse)
+        test root mean square errors rmse = sqrt(2 mse)
 
     >>> cross_validation(np.array([1.,2.,3.,4.]), np.array([6.,7.,8.,9.]), np.array([[3,2], [0,1]]), 1, 2, 3)
     (0.019866645527598144, 0.3355591436129497)
@@ -100,17 +100,16 @@ def cross_validation_lambda_degree_gamma(y, x, k_indices, k, lambda_, degree, ga
     phi_tr = build_poly(x_train, degree)
     phi_te = build_poly(x_test, degree)
 
-    max_iters = 3000
+    max_iters = 30
     initial_w = np.ones(phi_tr.shape[1])
 
     # ridge regression
     w, _ = reg_logistic_regression(y_train, phi_tr, lambda_, initial_w, max_iters, gamma)
 
     # calculate the loss for train and test data
-    loss_tr = np.sqrt(2*logreg.compute_loss(y_train, phi_tr, w))
     loss_te = np.sqrt(2*logreg.compute_loss(y_test, phi_te, w))
 
-    return loss_tr, loss_te
+    return loss_te
 
 
 def split_data(y, x, k_fold, seed=1):
@@ -211,7 +210,7 @@ def best_degree_lambda_gamma_selection(y, x, degrees, k_fold, lambdas, gammas, s
                 sum_rmse_te = 0
                 for k in range(k_fold):
                     sum_rmse_te += cross_validation_lambda_degree_gamma(y, x, k_indices, k, lambda_, degree, gamma)
-                    print("lambda : " + str(lambda_) + " best degree : " + str(degree) + " gamma : " + str(gamma) + " loss : " + str(best_rmse))
+                print("lambda : " + str(lambda_) + " degree : " + str(degree) + " gamma : " + str(gamma) + " loss : " + str(sum_rmse_te/k_fold))
                 rmse_for_degree_lambda_gamma.append(sum_rmse_te/k_fold)
             best_rmse_for_lambda.append(np.min(rmse_for_degree_lambda_gamma))
             best_gamma_for_lambda.append(gammas[np.argmin(rmse_for_degree_lambda_gamma)])
@@ -221,7 +220,8 @@ def best_degree_lambda_gamma_selection(y, x, degrees, k_fold, lambdas, gammas, s
     best_rmse = np.min(best_rmse_for_degree)
     best_lambda = lambdas[np.argmin(best_rmse_for_degree)]
     best_gamma = gammas[np.argmin(best_rmse_for_degree)]
+    best_degree = degrees[np.argmin(best_rmse_for_degree)]
 
-    print("Best lambda : " + str(best_lambda) + " best degree : " + str(best_degree) + " loss : " + str(best_rmse))
+    print("Best lambda : " + str(best_lambda) + " best degree : " + str(best_degree) + " best gamma : " + str(best_gamma) +  " loss : " + str(best_rmse))
 
     return best_degree, best_lambda, best_gamma, best_rmse
