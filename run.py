@@ -20,7 +20,7 @@ import numpy as np
 
 if __name__ == '__main__':
 
-    zero_and_one = True
+    logistic_model = True
 
 
 #*****************************
@@ -28,10 +28,10 @@ if __name__ == '__main__':
 #*****************************
 
     print("Loading training data...")
-    y_train, x_train, _ = load_csv_data("../data/train.csv", zero_and_one)
+    y_train, x_train, _ = load_csv_data("../data/train.csv", logistic_model)
 
     print("Loading testing data...")
-    _, x_test, ids = load_csv_data("../data/test.csv", zero_and_one)
+    _, x_test, ids = load_csv_data("../data/test.csv", logistic_model)
 
 
 
@@ -61,9 +61,9 @@ if __name__ == '__main__':
     #x_train = remove999_withmedian(x_train)
     #x_test = remove999_withmedian(x_test)
 
-    #standardize by feature
-    #x_train, _, _ = standardize(x_train)
-    #x_test, _, _ = standardize(x_test)
+    #normalize by feature
+    #x_train, _, _ = normalize(x_train)
+    #x_test, _, _ = normalize(x_test)
 
 
 
@@ -156,13 +156,13 @@ if __name__ == '__main__':
 #GET VALIDATION SET RESULT
 #*****************************
 
-    # tr_accuracy = compute_accuracy(y_train, phi_train, w, zero_and_one)
+    # tr_accuracy = compute_accuracy(y_train, phi_train, w, logistic_model)
     # print("Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
     #
     # va_loss = logreg.compute_loss(y_train_va, x_train_va, w)
     # #va_loss = linreg.compute_loss(y_train_va, x_train_va, w)
     #
-    # va_accuracy = compute_accuracy(y_train_va, x_train_va, w, zero_and_one)
+    # va_accuracy = compute_accuracy(y_train_va, x_train_va, w, logistic_model)
     # print("thresh 10 ⁻5,  Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
 
 
@@ -181,17 +181,17 @@ if __name__ == '__main__':
         y_train = y_train_jet[i]
 
         x_train = remove999_withmedian(x_train)
-        x_train, _, _ = standardize(x_train)
+        x_train, _, _ = normalize(x_train)
         phi_train = build_poly(x_train, degree, k_corr)
         initial_w = np.zeros(phi_train.shape[1])
         w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
 
         x_test_i = x_test_jet[i]
         x_test_i = remove999_withmedian(x_test_i)
-        x_test_i, _, _ = standardize(x_test_i)
+        x_test_i, _, _ = normalize(x_test_i)
         x_test_i = build_poly(x_test_i, degree, k_corr)
         y_test_i = logreg.sigmoid(x_test_i@w)
-        y_test_i = roundToPrediction(y_test_i, zero_and_one)
+        y_test_i = roundToPrediction(y_test_i, logistic_model)
         y_test[indices_jet[i]] = y_test_i
 
 
@@ -217,7 +217,7 @@ if __name__ == '__main__':
         y_train = y_train_jet[i]
 
         x_train = remove999_withmedian(x_train)
-        x_train, _, _ = standardize(x_train)
+        x_train, _, _ = normalize(x_train)
 
         phi_train = build_poly(x_train, 2, 200)
         #phi_train = x_train
@@ -228,12 +228,12 @@ if __name__ == '__main__':
 
         w, tr_loss = reg_logistic_regression(y_train_tr_i, x_train_tr_i, lambda_, initial_w, max_iter, gamma)
         tr_loss_jet += (tr_loss*len(y_train_tr_i))
-        tr_accuracy = compute_accuracy(y_train_tr_i, x_train_tr_i, w, zero_and_one)
+        tr_accuracy = compute_accuracy(y_train_tr_i, x_train_tr_i, w, logistic_model)
         tr_accuracy_jet += (tr_accuracy*len(y_train_tr_i))
 
         va_loss = logreg.compute_loss(y_train_va_i, x_train_va_i, w)
         va_loss_jet += (va_loss*len(y_train_va_i))
-        va_accuracy = compute_accuracy(y_train_va_i, x_train_va_i, w, zero_and_one)
+        va_accuracy = compute_accuracy(y_train_va_i, x_train_va_i, w, logistic_model)
         va_accuracy_jet += (va_accuracy*len(y_train_va_i))
 
         tr_total_length += len(y_train_tr_i)
@@ -262,7 +262,7 @@ if __name__ == '__main__':
     #y_test = logreg.sigmoid(phi_test@w)
 
 
-    #y_test = roundToPrediction(y_test, zero_and_one)
+    #y_test = roundToPrediction(y_test, logistic_model)
 
 
 

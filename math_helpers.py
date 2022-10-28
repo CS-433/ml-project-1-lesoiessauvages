@@ -37,11 +37,6 @@ def build_poly3(x, degree):
         output = np.c_[output, x**i]
     return output
 
-def build_poly2(x, degree):
-    output = np.ones(x.shape[0])
-    output = np.c_[output, np.sqrt(np.abs(x))]
-    return output
-
 
 def build_poly(x, degree, k_corr=0):
     """polynomial basis functions for input data x, for j=0 up to j=degree.
@@ -67,17 +62,18 @@ def build_poly(x, degree, k_corr=0):
 
 
 
-def standardize(x):
-    """Standardize the original data set column-wise."""
+def normalize(x):
+    """normalize the original data set column-wise."""
     mean_x = np.mean(x, axis=0)
     x = x - mean_x
     std_x = np.std(x, axis=0)
     x = x / std_x
     return x, mean_x, std_x
 
-def roundToPrediction(a, zero_and_one):
+def roundToPrediction(a, logistic_model):
+    """Step function to clip output."""
 
-    if zero_and_one :
+    if logistic_model :
         a[a < 0.5] = -1
         a[a >= 0.5] = 1
     else :
@@ -87,13 +83,13 @@ def roundToPrediction(a, zero_and_one):
 
 
 
-def compute_accuracy(y, tx, w, zero_and_one):
+def compute_accuracy(y, tx, w, logistic_model):
 
-    if zero_and_one :
+    if logistic_model :
         pred = logreg.sigmoid(tx@w)
     else :
         pred = tx@w
-    pred = roundToPrediction(pred, zero_and_one)
+    pred = roundToPrediction(pred, logistic_model)
     accuracy = np.count_nonzero(pred == y)/y.shape[0]
     return accuracy
 

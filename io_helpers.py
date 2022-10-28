@@ -17,7 +17,7 @@ def create_csv_submission(ids, y_pred, name):
         for r1, r2 in zip(ids, y_pred):
             writer.writerow({'Id':int(r1),'Prediction':int(r2)})
 
-def load_csv_data(data_path, zero_and_one, sub_sample=False):
+def load_csv_data(data_path, logistic_model, sub_sample=False):
     """Loads data and returns y (class labels), tX (features) and ids (event ids)"""
     y = np.genfromtxt(data_path, delimiter=",", skip_header=1, dtype=str, usecols=1)
     x = np.genfromtxt(data_path, delimiter=",", skip_header=1)
@@ -27,7 +27,7 @@ def load_csv_data(data_path, zero_and_one, sub_sample=False):
     # convert class labels from strings to binary (0,1)
     yb = np.ones(y.shape[0])
     # yb[np.where(y == "b")] = -1
-    if zero_and_one :
+    if logistic_model :
         yb[np.where(y == "b")] = 0
     else :
         yb[np.where(y == "b")] = -1
