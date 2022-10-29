@@ -2,6 +2,7 @@ import numpy as np
 
 
 def compute_loss(y, tx, w):
+    """Computes MSE"""
     e = y - tx @ w
     return np.mean(e ** 2) / 2
 

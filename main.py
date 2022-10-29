@@ -11,17 +11,20 @@ if __name__ == "__main__":
 
     ### Needs to be set to true in case of working with logistic regression.
     ### maps y to {0,1} or {-1,1}
-    logistic_model = False
+    logistic_model = True
 
     # *****************************
     # LOAD DATA
     # *****************************
 
     print("Loading training data...")
-    y_train, x_train, _ = load_csv_data("../data/train.csv", logistic_model)
+    y_train, x_train, _ = load_csv_data("../data/train.csv")
 
-    print("Loading testing data...")
-    _, x_test, ids = load_csv_data("../data/test.csv", logistic_model)
+    if logistic_model:
+        y_train[np.where(y_train == -1)] = 0
+
+    # print("Loading testing data...")
+    # _, x_test, ids = load_csv_data("../data/test.csv")
 
     # *****************************
     # DATA PREPROCESSING
@@ -34,21 +37,21 @@ if __name__ == "__main__":
     # x_test, _ , ids = replace_column(x_test, zeros((x_test.shape[0])))
 
     # replace by median of the feature -999 value
-    # x_train = remove999_with0(x_train)
+    x_train = remove999_with0(x_train)
     # x_test = remove999_with0(x_test)
 
     # x_train = remove999_withmean(x_train)
     # x_test = remove999_withmean(x_test)
 
-    # x_train = remove999_withmedian(x_train)
+    x_train = remove999_withmedian(x_train)
     # x_test = remove999_withmedian(x_test)
 
     # normalize by feature
-    # x_train, _, _ = normalize(x_train)
+    x_train, _, _ = normalize(x_train)
     # x_test, _, _ = normalize(x_test)
 
     ###perform polynomialfeature expansion
-    # phi_train = build_poly(x_train, degree)
+    phi_train = build_poly(x_train, degree)
     # phi_test = build_poly(x_test, degree)
 
     # phi_train = x_train
@@ -68,7 +71,7 @@ if __name__ == "__main__":
     # CREATE VALIDATION SET
     # *****************************
 
-    # phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
+    phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
 
     # *****************************
     # DATA PROCESSING
@@ -79,11 +82,11 @@ if __name__ == "__main__":
     # initiate weigths
     np.random.seed(1)
     # initial_w = np.random.rand(phi_train.shape[1])
-    # initial_w = np.zeros((phi_train.shape[1]))
+    initial_w = np.zeros((phi_train.shape[1]))
     # initial_w = np.ones((phi_train.shape[1]))
 
     lambda_ = 0.003
-    max_iter = 500
+    max_iter = 50
     gamma = 0.1
     k_corr = 15
 
@@ -105,7 +108,7 @@ if __name__ == "__main__":
 
     # logistic_regression
 
-    # w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
+    w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
 
     # reg_logistic_regression
 
@@ -115,41 +118,46 @@ if __name__ == "__main__":
     # GET VALIDATION SET RESULT
     # *****************************
 
-    # tr_accuracy = compute_accuracy(y_train, phi_train, w, logistic_model)
-    # print("Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
-    #
-    # va_loss = logreg.compute_loss(y_train_va, x_train_va, w)
-    # #va_loss = linreg.compute_loss(y_train_va, x_train_va, w)
-    #
-    # va_accuracy = compute_accuracy(y_train_va, x_train_va, w, logistic_model)
-    # print("thresh 10 ⁻5,  Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
+    tr_accuracy = compute_accuracy(y_train, phi_train, w, logistic_model)
+    print("Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
+
+    va_loss = logreg.compute_loss(y_train_va, x_train_va, w)
+    # va_loss = linreg.compute_loss(y_train_va, x_train_va, w)
+
+    va_accuracy = compute_accuracy(y_train_va, x_train_va, w, logistic_model)
+    print(
+        "thresh 10 ⁻5,  Validation loss : "
+        + str(va_loss)
+        + ", accuracy : "
+        + str(va_accuracy)
+    )
 
     # *****************************
     # SEPERATE IN FOR JET FOR SUBMISSION
     # *****************************
 
-    x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)
-    x_test_jet, indices_jet = separe_in_jet_test(x_test)
-    y_test = np.zeros(x_test.shape[0])
-
-    for i in range(4):
-
-        x_train = x_train_jet[i]
-        y_train = y_train_jet[i]
-
-        x_train = remove999_withmedian(x_train)
-        x_train, _, _ = normalize(x_train)
-        phi_train = build_poly(x_train, degree, k_corr)
-        initial_w = np.zeros(phi_train.shape[1])
-        w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
-
-        x_test_i = x_test_jet[i]
-        x_test_i = remove999_withmedian(x_test_i)
-        x_test_i, _, _ = normalize(x_test_i)
-        x_test_i = build_poly(x_test_i, degree, k_corr)
-        y_test_i = logreg.sigmoid(x_test_i @ w)
-        y_test_i = roundToPrediction(y_test_i, logistic_model)
-        y_test[indices_jet[i]] = y_test_i
+    # x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)
+    # x_test_jet, indices_jet = separe_in_jet_test(x_test)
+    # y_test = np.zeros(x_test.shape[0])
+    #
+    # for i in range(4):
+    #
+    #     x_train = x_train_jet[i]
+    #     y_train = y_train_jet[i]
+    #
+    #     x_train = remove999_withmedian(x_train)
+    #     x_train, _, _ = normalize(x_train)
+    #     phi_train = build_poly(x_train, degree, k_corr)
+    #     initial_w = np.zeros(phi_train.shape[1])
+    #     w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
+    #
+    #     x_test_i = x_test_jet[i]
+    #     x_test_i = remove999_withmedian(x_test_i)
+    #     x_test_i, _, _ = normalize(x_test_i)
+    #     x_test_i = build_poly(x_test_i, degree, k_corr)
+    #     y_test_i = logreg.sigmoid(x_test_i @ w)
+    #     y_test_i = roundToPrediction(y_test_i, logistic_model)
+    #     y_test[indices_jet[i]] = y_test_i
 
     # *****************************
     # SEPERATE IN FOUR JET FOR VALIDATION
@@ -217,6 +225,6 @@ if __name__ == "__main__":
     # *****************************
 
     # save_weights(w, "weights.txt")
-    create_csv_submission(ids, y_test, "o.csv")
+    # create_csv_submission(ids, y_test, "o.csv")
 
     print("\a")

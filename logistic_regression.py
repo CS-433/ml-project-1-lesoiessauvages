@@ -57,7 +57,7 @@ def compute_gradient(y, tx, w):
 
     pred = sigmoid(tx @ w)
 
-    grad = np.mean((pred - y) * tx.T, 1)
+    grad = tx.T @ (pred - y) / y.shape[0]
 
     return grad
 

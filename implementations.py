@@ -12,6 +12,7 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     """
 
     w = initial_w
+    loss = 0
     for n_iter in range(max_iters):
         # compute gradient
         gradient = linreg.compute_gradient(y, tx, w)
@@ -34,6 +35,7 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
 
     w = initial_w
     batch_size = 1
+    loss = 0
     for n_iter in range(max_iters):
         for minibatch_y, minibatch_tx in batch_iter(
             y, tx, batch_size=batch_size, num_batches=1
@@ -86,11 +88,13 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         loss : coresponding loss
     """
     w = initial_w
+    loss = 0
 
     for iter in range(max_iters):
         grad = logreg.compute_gradient(y, tx, w)
         loss = logreg.compute_loss(y, tx, w)
         w -= gamma * grad
+        print(loss)
     return w, loss
 
 
@@ -103,6 +107,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """
 
     w = initial_w
+    loss = 0
 
     for iter in range(max_iters):
 
