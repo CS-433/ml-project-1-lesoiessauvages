@@ -12,7 +12,7 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     """
 
     w = initial_w
-    loss = 0
+    loss = linreg.compute_loss(y, tx, w)
     for n_iter in range(max_iters):
         # compute gradient
         gradient = linreg.compute_gradient(y, tx, w)
@@ -21,7 +21,7 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
         # compute loss
         loss = linreg.compute_loss(y, tx, w)
 
-    return w, loss
+    return w, np.array(loss)
 
 
 def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
@@ -35,7 +35,7 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
 
     w = initial_w
     batch_size = 1
-    loss = 0
+    loss = linreg.compute_loss(y, tx, w)
     for n_iter in range(max_iters):
         for minibatch_y, minibatch_tx in batch_iter(
             y, tx, batch_size=batch_size, num_batches=1
@@ -45,10 +45,9 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
             # update w
             w = w - gamma * gradient
             # compute loss
-            loss = linreg.compute_loss(minibatch_y, minibatch_tx, w)
-            print(loss)
+            loss = linreg.compute_loss(y, tx, w)
 
-    return w, loss
+    return w, np.array(loss)
 
 
 def least_squares(y, tx):
@@ -63,7 +62,7 @@ def least_squares(y, tx):
     b = tx.T @ y
     w = np.linalg.solve(a, b)
     mse = linreg.compute_loss(y, tx, w)
-    return w, mse
+    return w, np.array(mse)
 
 
 def ridge_regression(y, tx, lambda_):
@@ -78,7 +77,7 @@ def ridge_regression(y, tx, lambda_):
     w = np.linalg.solve(a, b)
     loss = linreg.compute_loss(y, tx, w)
 
-    return w, loss
+    return w, np.array(loss)
 
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
@@ -88,14 +87,13 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         loss : coresponding loss
     """
     w = initial_w
-    loss = 0
+    loss = logreg.compute_loss(y, tx, w)
 
     for iter in range(max_iters):
         grad = logreg.compute_gradient(y, tx, w)
-        loss = logreg.compute_loss(y, tx, w)
         w -= gamma * grad
-        print(loss)
-    return w, loss
+        loss = logreg.compute_loss(y, tx, w)
+    return w, np.array(loss)
 
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
@@ -107,12 +105,12 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """
 
     w = initial_w
-    loss = 0
+    loss = logreg.compute_loss(y, tx, w)
 
     for iter in range(max_iters):
 
         grad = logreg.penalized_logistic_regression_gradient(y, tx, w, lambda_)
         w -= gamma * grad
-        loss = logreg.penalized_logistic_regression_loss(y, tx, w, lambda_)
+        loss = logreg.compute_loss(y, tx, w)
 
-    return w, loss
+    return w, np.array(loss)
