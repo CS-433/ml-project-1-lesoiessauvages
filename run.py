@@ -7,70 +7,20 @@ import logistic_regression as logreg
 import numpy as np
 
 
-def sigmoid2(t):
-    """apply sigmoid function on t.
-    Args:
-        t: scalar or numpy array
-    Returns:
-        scalar or numpy array
-    """
-    return 1.0 / (1 + np.exp(-t))
-
-
-def compute_loss2(y, tx, w):
-    """compute the cost by negative log likelihood.
-
-    Args:
-        y:  shape=(N, 1)
-        tx: shape=(N, D)
-        w:  shape=(D, 1)
-
-    Returns:
-        a non-negative loss
-
-    """
-    # print("begin compute loss")
-    assert y.shape[0] == tx.shape[0]
-    assert tx.shape[1] == w.shape[0]
-
-    ### CLASSICAL VERSION OF THE FORMULA
-    pred = sigmoid2(tx @ w)
-
-    ### VERSION WITH EPSILON TO AVOID INVALID VALUES
-    epsilon = 1e-7
-    loss = y.T @ np.log(pred + epsilon) + (1 - y).T @ np.log(1 - pred + epsilon)
-
-    return 1 / 2 * (-loss.item()) / y.shape[0]
-
-
-def compute_gradient2(y, tx, w):
-    """compute the gradient of loss.
-
-    Args:
-        y:  shape=(N, 1)
-        tx: shape=(N, D)
-        w:  shape=(D, 1)
-
-    Returns:
-        a vector of shape (D, 1)
-    """
-    pred = sigmoid2(tx @ w)
-    grad = np.mean((pred - y) * tx.T, 1)
-    return grad
-
-
 def logistic_regression2(y, tx, initial_w, max_iters, gamma):
     """Logistic regression using gradient descent or SGD (y ∈ {0, 1}).
+    Calls compute_loss with extra variable epsilon to avoid invalid values in logarithms. Cf. README and report.
     Returns :
         w : Last weight vector
         loss : coresponding loss
     """
     w = initial_w
+    loss = logreg.compute_loss(y, tx, w)
 
     for iter in range(max_iters):
-        grad = compute_gradient2(y, tx, w)
-        loss = compute_loss2(y, tx, w)
+        grad = logreg.compute_gradient(y, tx, w)
         w -= gamma * grad
+        loss = logreg.compute_loss(y, tx, w, True)
         if iter % 50 == 0:
             print("iter = " + str(iter) + " : " + str(loss))
     return w, loss
@@ -78,6 +28,8 @@ def logistic_regression2(y, tx, initial_w, max_iters, gamma):
 
 if __name__ == "__main__":
 
+    ### Needs to be set to true in case of working with logistic regression.
+    ### maps y to {0,1} or {-1,1}
     logistic_model = True
 
     # *****************************
@@ -85,10 +37,13 @@ if __name__ == "__main__":
     # *****************************
 
     print("Loading training data...")
-    y_train, x_train, _ = load_csv_data("../data/train.csv", logistic_model)
+    y_train, x_train, _ = load_csv_data("../data/train.csv")
+
+    if logistic_model:
+        y_train[np.where(y_train == -1)] = 0
 
     print("Loading testing data...")
-    _, x_test, ids = load_csv_data("../data/test.csv", logistic_model)
+    _, x_test, ids = load_csv_data("../data/test.csv")
 
     # *****************************
     # DATA PREPROCESSING
@@ -114,7 +69,7 @@ if __name__ == "__main__":
     # x_train, _, _ = normalize(x_train)
     # x_test, _, _ = normalize(x_test)
 
-    # perform polynomialfeature expansion
+    ###perform polynomialfeature expansion
     # phi_train = build_poly(x_train, degree)
     # phi_test = build_poly(x_test, degree)
 
@@ -150,8 +105,8 @@ if __name__ == "__main__":
     # initial_w = np.ones((phi_train.shape[1]))
 
     lambda_ = 0.003
-    max_iter = 5000
-    gamma = 0.1
+    max_iter = 25000
+    gamma = 0.2
     k_corr = 15
 
     # mean_squared_error_gd
@@ -186,10 +141,15 @@ if __name__ == "__main__":
     # print("Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
     #
     # va_loss = logreg.compute_loss(y_train_va, x_train_va, w)
-    # #va_loss = linreg.compute_loss(y_train_va, x_train_va, w)
+    # # va_loss = linreg.compute_loss(y_train_va, x_train_va, w)
     #
     # va_accuracy = compute_accuracy(y_train_va, x_train_va, w, logistic_model)
-    # print("thresh 10 ⁻5,  Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
+    # print(
+    #     "Validation loss : "
+    #     + str(va_loss)
+    #     + ", accuracy : "
+    #     + str(va_accuracy)
+    # )
 
     # *****************************
     # SEPERATE IN FOUR JET FOR SUBMISSION
@@ -219,53 +179,51 @@ if __name__ == "__main__":
         y_test[indices_jet[i]] = y_test_i
 
     # *****************************
-    # SEPERATE IN FOR JET FOR VALIDATION
+    # SEPERATE IN FOUR JET FOR VALIDATION
     # *****************************
 
-    """
-    tr_accuracy_jet = 0
-    va_accuracy_jet = 0
-    tr_loss_jet = 0
-    va_loss_jet = 0
-    tr_total_length = 0
-    va_total_length = 0
-
-    x_train_jet, y_train_jet, indices = split_in_jets(x_train, y_train)
-
-    for i in range(4):
-
-        x_train = x_train_jet[i]
-        y_train = y_train_jet[i]
-
-        x_train = replace_all_999_with_median(x_train)
-        x_train, _, _ = normalize(x_train)
-
-        phi_train = build_poly(x_train, 2, 200)
-        #phi_train = x_train
-        initial_w = np.zeros((phi_train.shape[1]))
-
-
-        x_train_tr_i, y_train_tr_i, x_train_va_i, y_train_va_i = split_data(y_train, phi_train, 5, 1)
-
-        w, tr_loss = reg_logistic_regression(y_train_tr_i, x_train_tr_i, lambda_, initial_w, max_iter, gamma)
-        tr_loss_jet += (tr_loss*len(y_train_tr_i))
-        tr_accuracy = compute_accuracy(y_train_tr_i, x_train_tr_i, w, logistic_model)
-        tr_accuracy_jet += (tr_accuracy*len(y_train_tr_i))
-
-        va_loss = logreg.compute_loss(y_train_va_i, x_train_va_i, w)
-        va_loss_jet += (va_loss*len(y_train_va_i))
-        va_accuracy = compute_accuracy(y_train_va_i, x_train_va_i, w, logistic_model)
-        va_accuracy_jet += (va_accuracy*len(y_train_va_i))
-
-        tr_total_length += len(y_train_tr_i)
-        va_total_length += len(y_train_va_i)
-        print(str(i) + " : 4 JET Training loss : " + str(tr_loss) + ", accuracy : " + str(tr_accuracy))
-        print(str(i) + " : 4 JET Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
-
-
-    print("4 JET Training loss : " + str(tr_loss_jet/tr_total_length) + ", accuracy : " + str(tr_accuracy_jet/tr_total_length))
-    print("4 JET Validation loss : " + str(va_loss_jet/va_total_length) + ", accuracy : " + str(va_accuracy_jet/va_total_length))
-    """
+    # tr_accuracy_jet = 0
+    # va_accuracy_jet = 0
+    # tr_loss_jet = 0
+    # va_loss_jet = 0
+    # tr_total_length = 0
+    # va_total_length = 0
+    #
+    # x_train_jet, y_train_jet, indices = split_in_jets(x_train, y_train)
+    #
+    # for i in range(4):
+    #
+    #     x_train = x_train_jet[i]
+    #     y_train = y_train_jet[i]
+    #
+    #     x_train = replace_all_999_with_median(x_train)
+    #     x_train, _, _ = normalize(x_train)
+    #
+    #     phi_train = build_poly(x_train, 2)
+    #     #phi_train = x_train
+    #     initial_w = np.ones((phi_train.shape[1]))
+    #
+    #
+    #     x_train_tr_i, y_train_tr_i, x_train_va_i, y_train_va_i = split_data(y_train, phi_train, 5, 1)
+    #
+    #     w, tr_loss = logistic_regression(y_train_tr_i, x_train_tr_i, initial_w, 20000,0.0006)
+    #     tr_loss_jet += (tr_loss*len(y_train_tr_i))
+    #     tr_accuracy = compute_accuracy(y_train_tr_i, x_train_tr_i, w, logistic_model)
+    #     tr_accuracy_jet += (tr_accuracy*len(y_train_tr_i))
+    #
+    #     va_loss = logreg.compute_loss(y_train_va_i, x_train_va_i, w)
+    #     va_loss_jet += (va_loss*len(y_train_va_i))
+    #     va_accuracy = compute_accuracy(y_train_va_i, x_train_va_i, w, logistic_model)
+    #     va_accuracy_jet += (va_accuracy*len(y_train_va_i))
+    #
+    #     tr_total_length += len(y_train_tr_i)
+    #     va_total_length += len(y_train_va_i)
+    #     print(str(i) + " : 4 JET Training loss : " + str(tr_loss) + ", accuracy : " + str(tr_accuracy))
+    #     print(str(i) + " : 4 JET Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
+    #
+    #
+    # print("4 JET Training loss : " + str(tr_loss_jet/tr_total_length) + ", accuracy : " + str(tr_accuracy_jet/tr_total_length))
+    # print("4 JET Validation loss : " + str(va_loss_jet/va_total_length) + ", accuracy : " + str(va_accuracy_jet/va_total_length))
 
     # *****************************
     # PREDICTION
@@ -285,7 +243,6 @@ if __name__ == "__main__":
     # WRITE RESULT
     # *****************************
 
-    # save_weights(w, "weights.txt")
     create_csv_submission(ids, y_test, "o.csv")
 
     print("\a")

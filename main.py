@@ -168,7 +168,7 @@ if __name__ == "__main__":
         x_train, _, _ = normalize(x_train)
         phi_train = build_poly(x_train, degree, k_corr)
         initial_w = np.zeros(phi_train.shape[1])
-        w, loss = logistic_regression2(y_train, phi_train, initial_w, max_iter, gamma)
+        w, loss = logistic_regression2(y_train, phi_train, lambda_, initial_w, max_iter, gamma)
 
         x_test_i = x_test_jet[i]
         x_test_i = replace_all_999_with_median(x_test_i)
