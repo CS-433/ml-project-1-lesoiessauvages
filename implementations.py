@@ -93,6 +93,8 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         grad = logreg.compute_gradient(y, tx, w)
         w -= gamma * grad
         loss = logreg.compute_loss(y, tx, w)
+        if iter % 50 == 0:
+            print(loss)
     return w, np.array(loss)
 
 

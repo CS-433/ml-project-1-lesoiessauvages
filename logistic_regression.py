@@ -35,12 +35,12 @@ def compute_loss(y, tx, w):
     pred = sigmoid(tx @ w)
 
     ### VERSION WITH EPSILON TO AVOID INVALID VALUES
-    # epsilon = 1e-7
-    # loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
+    epsilon = 1e-7
+    loss = y.T @ np.log(pred + epsilon) + (1 - y).T @ np.log(1 - pred + epsilon)
 
-    loss = y.T @ np.log(pred) + (1 - y).T @ np.log(1 - pred)
+    # loss = y.T @ np.log(pred) + (1 - y).T @ np.log(1 - pred)
 
-    return  (-loss.item()) / y.shape[0]
+    return (-loss.item()) / y.shape[0]
 
 
 def compute_gradient(y, tx, w):

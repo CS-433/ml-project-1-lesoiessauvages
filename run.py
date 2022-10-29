@@ -97,18 +97,18 @@ if __name__ == "__main__":
     degree = 2
 
     # replace column, per jet_num, that are undefinided for the corrsponding jet with 0 value
-    # x_train, y_train, _ = replace_column(x_train, y_train)
-    # x_test, _ , ids = replace_column(x_test, zeros((x_test.shape[0])))
+    # x_train, y_train, _ = replace_undefined_with_0(x_train, y_train)
+    # x_test, _ , ids = replace_undefined_with_0(x_test, zeros((x_test.shape[0])))
 
     # replace by median of the feature -999 value
-    # x_train = remove999_with0(x_train)
-    # x_test = remove999_with0(x_test)
+    # x_train = replace_all_999_with_0(x_train)
+    # x_test = replace_all_999_with_0(x_test)
 
-    # x_train = remove999_withmean(x_train)
-    # x_test = remove999_withmean(x_test)
+    # x_train = replace_all_999_with_mean(x_train)
+    # x_test = replace_all_999_with_mean(x_test)
 
-    # x_train = remove999_withmedian(x_train)
-    # x_test = remove999_withmedian(x_test)
+    # x_train = replace_all_999_with_median(x_train)
+    # x_test = replace_all_999_with_median(x_test)
 
     # normalize by feature
     # x_train, _, _ = normalize(x_train)
@@ -195,8 +195,8 @@ if __name__ == "__main__":
     # SEPERATE IN FOUR JET FOR SUBMISSION
     # *****************************
 
-    x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)
-    x_test_jet, indices_jet = separe_in_jet_test(x_test)
+    x_train_jet, y_train_jet, indices = split_in_jets(x_train, y_train)
+    x_test_jet, indices_jet = split_in_jets_test(x_test)
     y_test = np.zeros(x_test.shape[0])
 
     for i in range(4):
@@ -204,14 +204,14 @@ if __name__ == "__main__":
         x_train = x_train_jet[i]
         y_train = y_train_jet[i]
 
-        x_train = remove999_withmedian(x_train)
+        x_train = replace_all_999_with_median(x_train)
         x_train, _, _ = normalize(x_train)
         phi_train = build_poly(x_train, degree, k_corr)
         initial_w = np.zeros(phi_train.shape[1])
         w, loss = logistic_regression2(y_train, phi_train, initial_w, max_iter, gamma)
 
         x_test_i = x_test_jet[i]
-        x_test_i = remove999_withmedian(x_test_i)
+        x_test_i = replace_all_999_with_median(x_test_i)
         x_test_i, _, _ = normalize(x_test_i)
         x_test_i = build_poly(x_test_i, degree, k_corr)
         y_test_i = logreg.sigmoid(x_test_i @ w)
@@ -230,14 +230,14 @@ if __name__ == "__main__":
     tr_total_length = 0
     va_total_length = 0
 
-    x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)
+    x_train_jet, y_train_jet, indices = split_in_jets(x_train, y_train)
 
     for i in range(4):
 
         x_train = x_train_jet[i]
         y_train = y_train_jet[i]
 
-        x_train = remove999_withmedian(x_train)
+        x_train = replace_all_999_with_median(x_train)
         x_train, _, _ = normalize(x_train)
 
         phi_train = build_poly(x_train, 2, 200)

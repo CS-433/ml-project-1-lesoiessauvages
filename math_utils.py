@@ -96,7 +96,7 @@ def compute_accuracy(y, tx, w, logistic_model):
     return accuracy
 
 
-def remove999_with0(tx):
+def replace_all_999_with_0(tx):
 
     a = tx
     a[a == -999] = 0
@@ -104,7 +104,7 @@ def remove999_with0(tx):
     return a
 
 
-def remove999_withmean(tx):
+def replace_all_999_with_mean(tx):
 
     a = tx
     a[a == -999] = math.nan
@@ -118,7 +118,7 @@ def remove999_withmean(tx):
     return a
 
 
-def remove999_withmedian(tx):
+def replace_all_999_with_median(tx):
 
     a = tx
     a[a == -999] = math.nan
@@ -132,12 +132,7 @@ def remove999_withmedian(tx):
     return a
 
 
-def test_in_jet(tx):
-    jets = tx[:, 0]
-    print(jets[0:50])
-
-
-def separe_in_jet(tx, y):
+def split_in_jets(tx, y):
 
     jets = tx[:, 22]
 
@@ -168,7 +163,7 @@ def separe_in_jet(tx, y):
     )
 
 
-def separe_in_jet_test(tx):
+def split_in_jets_test(tx):
 
     jets = tx[:, 22]
 
@@ -191,7 +186,9 @@ def separe_in_jet_test(tx):
     return [tx_0, tx_1, tx_2, tx_3], [indices_0, indices_1, indices_2, indices_3]
 
 
-def replace_column(tx, y):
+def replace_undefined_with_0(tx, y):
+    """Replaces undefined features by 0, according to feature PRI_jet_num
+    """
     jets = tx[:, 22]
 
     tx_0 = tx[jets == 0]
