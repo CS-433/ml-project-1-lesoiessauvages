@@ -192,13 +192,13 @@ if __name__ == '__main__':
 
 
 
-#least_squares_GD
+#mean_squared_error_gd
 
-    #w, loss = least_squares_GD(y_train, phi_train, initial_w, max_iter, gamma)
+    #w, loss = mean_squared_error_gd(y_train, phi_train, initial_w, max_iter, gamma)
 
-#least_squares_SGD
+#mean_squared_error_sgd
 
-    #w, loss = least_squares_SGD(y_train, phi_train, initial_w, max_iter, gamma)
+    #w, loss = mean_squared_error_sgd(y_train, phi_train, initial_w, max_iter, gamma)
 
 #least_squares
 

@@ -128,13 +128,13 @@ if __name__ == '__main__':
 
 
 
-#least_squares_GD
+#mean_squared_error_gd
 
-    #w, loss = least_squares_GD(y_train, phi_train, initial_w, max_iter, gamma)
+    #w, loss = mean_squared_error_gd(y_train, phi_train, initial_w, max_iter, gamma)
 
-#least_squares_SGD
+#mean_squared_error_sgd
 
-    #w, loss = least_squares_SGD(y_train, phi_train, initial_w, max_iter, gamma)
+    #w, loss = mean_squared_error_sgd(y_train, phi_train, initial_w, max_iter, gamma)
 
 #least_squares
 
@@ -228,7 +228,7 @@ if __name__ == '__main__':
     #
     #     x_train_tr_i, y_train_tr_i, x_train_va_i, y_train_va_i = split_data(y_train, phi_train, 5, 1)
     #
-    #     w, tr_loss = least_squares_GD(y_train_tr_i, x_train_tr_i, initial_w, 20000,0.00006)
+    #     w, tr_loss = mean_squared_error_gd(y_train_tr_i, x_train_tr_i, initial_w, 20000,0.00006)
     #     tr_loss_jet += (tr_loss*len(y_train_tr_i))
     #     tr_accuracy = compute_accuracy(y_train_tr_i, x_train_tr_i, w, logistic_model)
     #     tr_accuracy_jet += (tr_accuracy*len(y_train_tr_i))

@@ -94,7 +94,7 @@ def cross_validation_lambda_degree_gamma(y, x, k_indices, k, lambda_, degree, ga
     initial_w = np.ones(phi_tr.shape[1])
 
     # ridge regression
-    w, _ = least_squares_GD(y_train, phi_tr, initial_w, max_iters, gamma)
+    w, _ = mean_squared_error_gd(y_train, phi_tr, initial_w, max_iters, gamma)
 
     # calculate the loss for train and test data
     loss_te = np.sqrt(2*logreg.compute_loss(y_test, phi_te, w))

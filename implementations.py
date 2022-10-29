@@ -4,7 +4,7 @@ import logistic_regression as logreg
 import linear_regression as linreg
 
 
-def least_squares_GD(y, tx, initial_w, max_iters, gamma):
+def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     """Linear regression using gradient descent.
     Returns :
         w : Last weight vector
@@ -24,7 +24,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     return w, loss
 
 
-def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
+def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     """Linear regression using stochastic gradient descent.
     Returns :
         w : Last weight vector
