@@ -1,6 +1,6 @@
 from implementations import *
-from math_helpers import *
-from io_helpers import *
+from math_utils import *
+from helpers import *
 from cross import *
 import linear_regression as linreg
 import logistic_regression as logreg
@@ -76,6 +76,8 @@ def logistic_regression2(y, tx, initial_w, max_iters, gamma):
         grad = compute_gradient2(y, tx, w)
         loss = compute_loss2(y, tx, w)
         w -= gamma * grad
+        if(iter%50==0):
+            print("iter = " + str(iter) + " : " + str(loss))
     return w, loss
 
 
@@ -182,7 +184,7 @@ if __name__ == '__main__':
     #initial_w = np.ones((phi_train.shape[1]))
 
     lambda_ = 0.003
-    max_iter = 500
+    max_iter = 5000
     gamma = 0.1
     k_corr = 15
 
@@ -232,7 +234,7 @@ if __name__ == '__main__':
 
 
 #*****************************
-#SEPERATE IN FOR JET FOR SUBMISSION
+#SEPERATE IN FOUR JET FOR SUBMISSION
 #*****************************
 
     x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)

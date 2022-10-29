@@ -1,4 +1,4 @@
-from math_helpers import *
+from math_utils import *
 import numpy as np
 import logistic_regression as logreg
 import linear_regression as linreg

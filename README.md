@@ -22,13 +22,13 @@ We tried iteratively the 6 main models, along with various data preprocessing. C
   
   Each of them returns the last weight vector and the associated (training) loss.
 
-- `io_helpers.py` : Contains everything related to reading and writing files. In particular .csv files.
+- `helpers.py` : Contains everything related to reading and writing files. In particular .csv files.
 
 - `logistic_regression.py` : Contains functions related to logistic regression for loss, gradient descent and sigmoid.
 
 - `linear_regression.py` : Contains functions related to linear regression : loss and gradient descent.
 
-- `math_helpers.py` : Contains all other math-related functions : polynomial feature expansion, batch_iter for SGD, normalization, prediction, data preprocessing (cf report)
+- `math_utils.py` : Contains all other math-related functions : polynomial feature expansion, batch_iter for SGD, normalization, prediction, data preprocessing (cf report)
 
 - `cross.py` : Contains all functions related to automatic cross-validation. Our models in total contain 3 hyper-parameter : gamma (learning rate), lambda (penalization for ridge regression) and degree (for polynomial feature expansion). This file offers two functions to select best degree and lambda, as welle as to select best degree, lambda and gamma at the same time. 
 
