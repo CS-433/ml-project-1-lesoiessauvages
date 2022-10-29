@@ -82,6 +82,7 @@ def ridge_regression(y, tx, lambda_):
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
     """Logistic regression using gradient descent or SGD (y ∈ {0, 1}).
+    
     Returns :
         w : Last weight vector
         loss : coresponding loss

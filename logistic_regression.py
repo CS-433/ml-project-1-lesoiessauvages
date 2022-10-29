@@ -14,13 +14,14 @@ def sigmoid(t):
     return 1.0 / (1 + np.exp(-t))
 
 
-def compute_loss(y, tx, w):
+def compute_loss(y, tx, w, use_epsilon=False):
     """compute the cost by negative log likelihood.
 
     Args:
         y:  shape=(N, 1)
         tx: shape=(N, D)
         w:  shape=(D, 1)
+        use_epsilon: if set to True, uses a formula with extra variable epsilon to avoid invalid logarithms
 
     Returns:
         a non-negative loss
@@ -31,14 +32,15 @@ def compute_loss(y, tx, w):
     assert y.shape[0] == tx.shape[0]
     assert tx.shape[1] == w.shape[0]
 
-    ### CLASSICAL VERSION OF THE FORMULA
     pred = sigmoid(tx @ w)
 
-    ### VERSION WITH EPSILON TO AVOID INVALID VALUES
-    epsilon = 1e-7
-    loss = y.T @ np.log(pred + epsilon) + (1 - y).T @ np.log(1 - pred + epsilon)
-
-    # loss = y.T @ np.log(pred) + (1 - y).T @ np.log(1 - pred)
+    if use_epsilon:
+        ### VERSION WITH EPSILON TO AVOID INVALID VALUES
+        epsilon = 1e-7
+        loss = y.T @ np.log(pred + epsilon) + (1 - y).T @ np.log(1 - pred + epsilon)
+    else:
+        ### CLASSICAL VERSION OF THE FORMULA
+        loss = y.T @ np.log(pred) + (1 - y).T @ np.log(1 - pred)
 
     return (-loss.item()) / y.shape[0]
 

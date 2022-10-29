@@ -7,6 +7,25 @@ import logistic_regression as logreg
 import numpy as np
 
 
+def logistic_regression2(y, tx, initial_w, max_iters, gamma):
+    """Logistic regression using gradient descent or SGD (y ∈ {0, 1}).
+    Calls compute_loss with extra variable epsilon to avoid invalid values in logarithms. Cf. README and report.
+    Returns :
+        w : Last weight vector
+        loss : coresponding loss
+    """
+    w = initial_w
+    loss = logreg.compute_loss(y, tx, w)
+
+    for iter in range(max_iters):
+        grad = logreg.compute_gradient(y, tx, w)
+        w -= gamma * grad
+        loss = logreg.compute_loss(y, tx, w, True)
+        if iter % 50 == 0:
+            print("iter = " + str(iter) + " : " + str(loss))
+    return w, loss
+
+
 if __name__ == "__main__":
 
     ### Needs to be set to true in case of working with logistic regression.
@@ -23,8 +42,8 @@ if __name__ == "__main__":
     if logistic_model:
         y_train[np.where(y_train == -1)] = 0
 
-    # print("Loading testing data...")
-    # _, x_test, ids = load_csv_data("../data/test.csv")
+    print("Loading testing data...")
+    _, x_test, ids = load_csv_data("../data/test.csv")
 
     # *****************************
     # DATA PREPROCESSING
@@ -85,9 +104,9 @@ if __name__ == "__main__":
     # initial_w = np.zeros((phi_train.shape[1]))
     # initial_w = np.ones((phi_train.shape[1]))
 
-    lambda_ = 0.01
-    max_iter = 50
-    gamma = 0.1
+    lambda_ = 0.003
+    max_iter = 25000
+    gamma = 0.2
     k_corr = 15
 
     # mean_squared_error_gd
@@ -133,7 +152,7 @@ if __name__ == "__main__":
     # )
 
     # *****************************
-    # SEPERATE IN FOR JET FOR SUBMISSION
+    # SEPERATE IN FOUR JET FOR SUBMISSION
     # *****************************
 
     x_train_jet, y_train_jet, indices = split_in_jets(x_train, y_train)
@@ -149,7 +168,7 @@ if __name__ == "__main__":
         x_train, _, _ = normalize(x_train)
         phi_train = build_poly(x_train, degree, k_corr)
         initial_w = np.zeros(phi_train.shape[1])
-        w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
+        w, loss = logistic_regression2(y_train, phi_train, initial_w, max_iter, gamma)
 
         x_test_i = x_test_jet[i]
         x_test_i = replace_all_999_with_median(x_test_i)
@@ -224,7 +243,6 @@ if __name__ == "__main__":
     # WRITE RESULT
     # *****************************
 
-    # save_weights(w, "weights.txt")
-    # create_csv_submission(ids, y_test, "o.csv")
+    create_csv_submission(ids, y_test, "o.csv")
 
     print("\a")
