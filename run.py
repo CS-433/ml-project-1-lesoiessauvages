@@ -7,10 +7,6 @@ import logistic_regression as logreg
 import numpy as np
 
 
-
-
-
-
 def sigmoid2(t):
     """apply sigmoid function on t.
     Args:
@@ -33,18 +29,18 @@ def compute_loss2(y, tx, w):
         a non-negative loss
 
     """
-    #print("begin compute loss")
+    # print("begin compute loss")
     assert y.shape[0] == tx.shape[0]
     assert tx.shape[1] == w.shape[0]
 
     ### CLASSICAL VERSION OF THE FORMULA
-    pred = sigmoid2(tx@w)
+    pred = sigmoid2(tx @ w)
 
     ### VERSION WITH EPSILON TO AVOID INVALID VALUES
     epsilon = 1e-7
-    loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
+    loss = y.T @ np.log(pred + epsilon) + (1 - y).T @ np.log(1 - pred + epsilon)
 
-    return 1/2*(-loss.item())/y.shape[0]
+    return 1 / 2 * (-loss.item()) / y.shape[0]
 
 
 def compute_gradient2(y, tx, w):
@@ -58,10 +54,9 @@ def compute_gradient2(y, tx, w):
     Returns:
         a vector of shape (D, 1)
     """
-    pred = sigmoid2(tx@w)
-    grad = np.mean((pred - y)*tx.T, 1)
+    pred = sigmoid2(tx @ w)
+    grad = np.mean((pred - y) * tx.T, 1)
     return grad
-
 
 
 def logistic_regression2(y, tx, initial_w, max_iters, gamma):
@@ -76,22 +71,18 @@ def logistic_regression2(y, tx, initial_w, max_iters, gamma):
         grad = compute_gradient2(y, tx, w)
         loss = compute_loss2(y, tx, w)
         w -= gamma * grad
-        if(iter%50==0):
+        if iter % 50 == 0:
             print("iter = " + str(iter) + " : " + str(loss))
     return w, loss
 
 
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     logistic_model = True
 
-
-#*****************************
-#LOAD DATA
-#*****************************
+    # *****************************
+    # LOAD DATA
+    # *****************************
 
     print("Loading training data...")
     y_train, x_train, _ = load_csv_data("../data/train.csv", logistic_model)
@@ -99,128 +90,97 @@ if __name__ == '__main__':
     print("Loading testing data...")
     _, x_test, ids = load_csv_data("../data/test.csv", logistic_model)
 
-
-
-
-
-
-
-
-
-#*****************************
-#DATA PREPROCESSING
-#*****************************
+    # *****************************
+    # DATA PREPROCESSING
+    # *****************************
 
     degree = 2
 
-    #replace column, per jet_num, that are undefinided for the corrsponding jet with 0 value
-    #x_train, y_train, _ = replace_column(x_train, y_train)
-    #x_test, _ , ids = replace_column(x_test, zeros((x_test.shape[0])))
+    # replace column, per jet_num, that are undefinided for the corrsponding jet with 0 value
+    # x_train, y_train, _ = replace_column(x_train, y_train)
+    # x_test, _ , ids = replace_column(x_test, zeros((x_test.shape[0])))
 
-    #replace by median of the feature -999 value
-    #x_train = remove999_with0(x_train)
-    #x_test = remove999_with0(x_test)
+    # replace by median of the feature -999 value
+    # x_train = remove999_with0(x_train)
+    # x_test = remove999_with0(x_test)
 
-    #x_train = remove999_withmean(x_train)
-    #x_test = remove999_withmean(x_test)
+    # x_train = remove999_withmean(x_train)
+    # x_test = remove999_withmean(x_test)
 
-    #x_train = remove999_withmedian(x_train)
-    #x_test = remove999_withmedian(x_test)
+    # x_train = remove999_withmedian(x_train)
+    # x_test = remove999_withmedian(x_test)
 
-    #normalize by feature
-    #x_train, _, _ = normalize(x_train)
-    #x_test, _, _ = normalize(x_test)
+    # normalize by feature
+    # x_train, _, _ = normalize(x_train)
+    # x_test, _, _ = normalize(x_test)
 
+    # perform polynomialfeature expansion
+    # phi_train = build_poly(x_train, degree)
+    # phi_test = build_poly(x_test, degree)
 
+    # phi_train = x_train
+    # phi_test = x_test
 
+    # *****************************
+    # PERFORM CROSS VALIDATION
+    # *****************************
 
-
-
-
-    #perform polynomialfeature expansion
-    #phi_train = build_poly(x_train, degree)
-    #phi_test = build_poly(x_test, degree)
-
-    #phi_train = x_train
-    #phi_test = x_test
-
-
-
-
-
-
-#*****************************
-#PERFORM CROSS VALIDATION
-#*****************************
-
-    degrees = np.arange(1,4)
+    degrees = np.arange(1, 4)
     lambdas = np.logspace(-5, 0, 10)
     gammas = np.logspace(-6, 1, 10)
-    #best_degree, best_lambda, best_rmse = best_degree_lambda_selection(y_train, x_train, degrees, 5, lambdas)
-    #best_degree, best_lambda, best_gamma, best_rmse = best_degree_lambda_gamma_selection(y_train, x_train, degrees, 5, lambdas, gammas)
+    # best_degree, best_lambda, best_rmse = best_degree_lambda_selection(y_train, x_train, degrees, 5, lambdas)
+    # best_degree, best_lambda, best_gamma, best_rmse = best_degree_lambda_gamma_selection(y_train, x_train, degrees, 5, lambdas, gammas)
 
+    # *****************************
+    # CREATE VALIDATION SET
+    # *****************************
 
+    # phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
 
-
-#*****************************
-#CREATE VALIDATION SET
-#*****************************
-
-    #phi_train, y_train, x_train_va, y_train_va = split_data(y_train, phi_train, 5, 1)
-
-
-
-
-#*****************************
-#DATA PROCESSING
-#*****************************
+    # *****************************
+    # DATA PROCESSING
+    # *****************************
 
     print("Training model...")
 
-#initiate weigths
+    # initiate weigths
     np.random.seed(1)
-    #initial_w = np.random.rand(phi_train.shape[1])
-    #initial_w = np.zeros((phi_train.shape[1]))
-    #initial_w = np.ones((phi_train.shape[1]))
+    # initial_w = np.random.rand(phi_train.shape[1])
+    # initial_w = np.zeros((phi_train.shape[1]))
+    # initial_w = np.ones((phi_train.shape[1]))
 
     lambda_ = 0.003
     max_iter = 5000
     gamma = 0.1
     k_corr = 15
 
+    # mean_squared_error_gd
 
+    # w, loss = mean_squared_error_gd(y_train, phi_train, initial_w, max_iter, gamma)
 
+    # mean_squared_error_sgd
 
+    # w, loss = mean_squared_error_sgd(y_train, phi_train, initial_w, max_iter, gamma)
 
-#mean_squared_error_gd
+    # least_squares
 
-    #w, loss = mean_squared_error_gd(y_train, phi_train, initial_w, max_iter, gamma)
+    # w, loss = least_squares(y_train, phi_train)
 
-#mean_squared_error_sgd
+    # ridge_regression
 
-    #w, loss = mean_squared_error_sgd(y_train, phi_train, initial_w, max_iter, gamma)
+    # w, loss = ridge_regression(y_train, phi_train, lambda_)
 
-#least_squares
+    # logistic_regression
 
-    #w, loss = least_squares(y_train, phi_train)
+    # w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
 
-#ridge_regression
+    # reg_logistic_regression
 
-    #w, loss = ridge_regression(y_train, phi_train, lambda_)
+    # w, loss = reg_logistic_regression(y_train, phi_train, lambda_, initial_w, max_iter, gamma)
 
-#logistic_regression
-
-    #w, loss = logistic_regression(y_train, phi_train, initial_w, max_iter, gamma)
-
-#reg_logistic_regression
-
-    #w, loss = reg_logistic_regression(y_train, phi_train, lambda_, initial_w, max_iter, gamma)
-
-
-
-#*****************************
-#GET VALIDATION SET RESULT
-#*****************************
+    # *****************************
+    # GET VALIDATION SET RESULT
+    # *****************************
 
     # tr_accuracy = compute_accuracy(y_train, phi_train, w, logistic_model)
     # print("Training loss : " + str(loss) + ", accuracy : " + str(tr_accuracy))
@@ -231,11 +191,9 @@ if __name__ == '__main__':
     # va_accuracy = compute_accuracy(y_train_va, x_train_va, w, logistic_model)
     # print("thresh 10 ⁻5,  Validation loss : " + str(va_loss) + ", accuracy : " + str(va_accuracy))
 
-
-
-#*****************************
-#SEPERATE IN FOUR JET FOR SUBMISSION
-#*****************************
+    # *****************************
+    # SEPERATE IN FOUR JET FOR SUBMISSION
+    # *****************************
 
     x_train_jet, y_train_jet, indices = separe_in_jet(x_train, y_train)
     x_test_jet, indices_jet = separe_in_jet_test(x_test)
@@ -256,16 +214,13 @@ if __name__ == '__main__':
         x_test_i = remove999_withmedian(x_test_i)
         x_test_i, _, _ = normalize(x_test_i)
         x_test_i = build_poly(x_test_i, degree, k_corr)
-        y_test_i = logreg.sigmoid(x_test_i@w)
+        y_test_i = logreg.sigmoid(x_test_i @ w)
         y_test_i = roundToPrediction(y_test_i, logistic_model)
         y_test[indices_jet[i]] = y_test_i
 
-
-
-
-#*****************************
-#SEPERATE IN FOR JET FOR VALIDATION
-#*****************************
+    # *****************************
+    # SEPERATE IN FOR JET FOR VALIDATION
+    # *****************************
 
     """
     tr_accuracy_jet = 0
@@ -312,32 +267,25 @@ if __name__ == '__main__':
     print("4 JET Validation loss : " + str(va_loss_jet/va_total_length) + ", accuracy : " + str(va_accuracy_jet/va_total_length))
     """
 
+    # *****************************
+    # PREDICTION
+    # *****************************
 
+    # least_squares and ridge_regression
 
-#*****************************
-#PREDICTION
-#*****************************
+    # y_test = phi_test@w
 
+    # logistic_regression and reg_logistic_regression
 
-#least_squares and ridge_regression
+    # y_test = logreg.sigmoid(phi_test@w)
 
-    #y_test = phi_test@w
+    # y_test = roundToPrediction(y_test, logistic_model)
 
-#logistic_regression and reg_logistic_regression
+    # *****************************
+    # WRITE RESULT
+    # *****************************
 
-    #y_test = logreg.sigmoid(phi_test@w)
-
-
-    #y_test = roundToPrediction(y_test, logistic_model)
-
-
-
-#*****************************
-#WRITE RESULT
-#*****************************
-
-    #save_weights(w, "weights.txt")
+    # save_weights(w, "weights.txt")
     create_csv_submission(ids, y_test, "o.csv")
 
-
-    print('\a')
+    print("\a")

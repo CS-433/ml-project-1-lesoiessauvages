@@ -27,24 +27,20 @@ def compute_loss(y, tx, w):
 
     """
 
-    #print("begin compute loss")
+    # print("begin compute loss")
     assert y.shape[0] == tx.shape[0]
     assert tx.shape[1] == w.shape[0]
 
-
-
     ### CLASSICAL VERSION OF THE FORMULA
-    pred = sigmoid(tx@w)
-
+    pred = sigmoid(tx @ w)
 
     ### VERSION WITH EPSILON TO AVOID INVALID VALUES
-    #epsilon = 1e-7
-    #loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
+    # epsilon = 1e-7
+    # loss = y.T@np.log(pred + epsilon) + (1 - y).T@np.log(1 - pred + epsilon)
 
+    loss = y.T @ np.log(pred) + (1 - y).T @ np.log(1 - pred)
 
-    loss = y.T@np.log(pred) + (1 - y).T@np.log(1 - pred)
-
-    return 1/2*(-loss.item())/y.shape[0]
+    return 1 / 2 * (-loss.item()) / y.shape[0]
 
 
 def compute_gradient(y, tx, w):
@@ -59,10 +55,9 @@ def compute_gradient(y, tx, w):
         a vector of shape (D, 1)
     """
 
+    pred = sigmoid(tx @ w)
 
-    pred = sigmoid(tx@w)
-
-    grad = np.mean((pred - y)*tx.T, 1)
+    grad = np.mean((pred - y) * tx.T, 1)
 
     return grad
 
@@ -71,6 +66,7 @@ def penalized_logistic_regression_gradient(y, tx, w, lambda_):
 
     gradient = compute_gradient(y, tx, w) + 2 * lambda_ * w
     return gradient
+
 
 def penalized_logistic_regression_loss(y, tx, w, lambda_):
 

@@ -14,12 +14,11 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     w = initial_w
     for n_iter in range(max_iters):
         # compute gradient
-        gradient= linreg.compute_gradient(y, tx, w)
-        #update w
-        w = w - gamma*gradient
-        #compute loss
+        gradient = linreg.compute_gradient(y, tx, w)
+        # update w
+        w = w - gamma * gradient
+        # compute loss
         loss = linreg.compute_loss(y, tx, w)
-
 
     return w, loss
 
@@ -36,12 +35,14 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     w = initial_w
     batch_size = 1
     for n_iter in range(max_iters):
-        for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size=batch_size, num_batches=1):
+        for minibatch_y, minibatch_tx in batch_iter(
+            y, tx, batch_size=batch_size, num_batches=1
+        ):
             # compute gradient
             gradient = linreg.compute_gradient(minibatch_y, minibatch_tx, w)
-            #update w
-            w = w - gamma*gradient
-            #compute loss
+            # update w
+            w = w - gamma * gradient
+            # compute loss
             loss = linreg.compute_loss(minibatch_y, minibatch_tx, w)
             print(loss)
 
@@ -55,10 +56,9 @@ def least_squares(y, tx):
         loss : coresponding loss
     """
 
-
     print(tx)
-    a = tx.T@tx
-    b = tx.T@y
+    a = tx.T @ tx
+    b = tx.T @ y
     w = np.linalg.solve(a, b)
     mse = linreg.compute_loss(y, tx, w)
     return w, mse
@@ -70,9 +70,9 @@ def ridge_regression(y, tx, lambda_):
         w : Last weight vector
         loss : coresponding loss
     """
-    lI = lambda_*2*y.shape[0]*np.eye(tx.shape[1])
-    a = tx.T@tx + lI
-    b = tx.T@y
+    lI = lambda_ * 2 * y.shape[0] * np.eye(tx.shape[1])
+    a = tx.T @ tx + lI
+    b = tx.T @ y
     w = np.linalg.solve(a, b)
     loss = linreg.compute_loss(y, tx, w)
 
@@ -92,7 +92,6 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
         loss = logreg.compute_loss(y, tx, w)
         w -= gamma * grad
     return w, loss
-
 
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
